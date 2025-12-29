@@ -6,6 +6,23 @@ import { useState } from "react";
 
 const Index = () => {
   const [rubiesAmount, setRubiesAmount] = useState(1);
+  const [isAdmin, setIsAdmin] = useState(false);
+  const [showAdminPanel, setShowAdminPanel] = useState(false);
+  const [adminPassword, setAdminPassword] = useState("");
+
+  const revenue = {
+    week: 12450,
+    month: 48900,
+    year: 520000,
+    total: 1250000
+  };
+
+  const handleAdminLogin = () => {
+    if (adminPassword === "admin123") {
+      setIsAdmin(true);
+      setShowAdminPanel(false);
+    }
+  };
   const recentPurchases = [
     { player: "xXDarkKnightXx", item: "VIP Статус", price: "500₽", time: "2 мин назад" },
     { player: "ProGamer2024", item: "Алмазный ранг", price: "1200₽", time: "15 мин назад" },
@@ -82,11 +99,17 @@ const Index = () => {
                 asuxgrief
               </h1>
             </div>
-            <div className="hidden md:flex gap-6">
+            <div className="hidden md:flex gap-6 items-center">
               <a href="#about" className="hover:text-primary transition-colors">О сервере</a>
               <a href="#donate" className="hover:text-primary transition-colors">Донаты</a>
               <a href="#rules" className="hover:text-primary transition-colors">Правила</a>
               <a href="#purchases" className="hover:text-primary transition-colors">Покупки</a>
+              <button
+                onClick={() => setShowAdminPanel(true)}
+                className="text-muted-foreground hover:text-primary transition-colors"
+              >
+                <Icon name="Lock" size={20} />
+              </button>
             </div>
           </div>
         </div>
@@ -95,10 +118,7 @@ const Index = () => {
       <section className="pt-32 pb-20 px-4">
         <div className="container mx-auto max-w-6xl">
           <div className="text-center space-y-6 animate-fade-in">
-            <Badge className="bg-primary/20 text-primary border-primary/30 px-4 py-1">
-              <Icon name="Zap" size={16} className="mr-2 inline" />
-              Онлайн: 247 игроков
-            </Badge>
+
             <h1 className="text-5xl md:text-7xl font-bold leading-tight">
               Добро пожаловать на
               <br />
@@ -123,7 +143,7 @@ const Index = () => {
               <p className="text-sm text-muted-foreground mb-2">IP для подключения:</p>
               <div className="inline-flex items-center gap-2 bg-card border border-primary/30 rounded-lg px-6 py-3">
                 <Icon name="Server" size={20} className="text-primary" />
-                <code className="text-xl font-mono text-primary">play.asuxgrief.ru</code>
+                <code className="text-xl font-mono text-primary">asuxgrief.ru</code>
               </div>
             </div>
           </div>
@@ -133,13 +153,19 @@ const Index = () => {
       <section id="about" className="py-20 px-4 bg-gradient-to-b from-transparent via-primary/5 to-transparent">
         <div className="container mx-auto max-w-6xl">
           <h2 className="text-4xl font-bold text-center mb-12">О сервере</h2>
+          <div className="text-center mb-8">
+            <div className="inline-flex items-center gap-2 bg-card border border-primary/30 rounded-lg px-6 py-3">
+              <Icon name="Server" size={20} className="text-primary" />
+              <code className="text-lg font-mono text-primary">asuxgrief.ru</code>
+            </div>
+          </div>
           <div className="grid md:grid-cols-3 gap-6">
             <Card className="p-6 bg-card border-border hover:border-primary/50 transition-all hover:scale-105">
               <div className="w-12 h-12 bg-gradient-to-br from-primary to-secondary rounded-lg flex items-center justify-center mb-4">
                 <Icon name="Users" size={24} className="text-white" />
               </div>
               <h3 className="text-xl font-semibold mb-2">Активное комьюнити</h3>
-              <p className="text-muted-foreground">Более 10,000 игроков в нашем Discord сообществе. Новые друзья каждый день!</p>
+              <p className="text-muted-foreground">Более 50 игроков в нашем Discord сообществе. Новые друзья каждый день!</p>
             </Card>
             <Card className="p-6 bg-card border-border hover:border-primary/50 transition-all hover:scale-105">
               <div className="w-12 h-12 bg-gradient-to-br from-primary to-secondary rounded-lg flex items-center justify-center mb-4">
@@ -333,6 +359,85 @@ const Index = () => {
           </div>
         </div>
       </section>
+
+      {showAdminPanel && !isAdmin && (
+        <div className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+          <Card className="max-w-md w-full p-6 bg-card">
+            <div className="flex items-center justify-between mb-4">
+              <h3 className="text-2xl font-bold">Админ-панель</h3>
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={() => setShowAdminPanel(false)}
+              >
+                <Icon name="X" size={20} />
+              </Button>
+            </div>
+            <div className="space-y-4">
+              <div>
+                <label className="text-sm text-muted-foreground mb-2 block">Пароль</label>
+                <input
+                  type="password"
+                  value={adminPassword}
+                  onChange={(e) => setAdminPassword(e.target.value)}
+                  className="w-full bg-muted border border-border rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-primary"
+                  placeholder="Введите пароль"
+                  onKeyDown={(e) => e.key === 'Enter' && handleAdminLogin()}
+                />
+              </div>
+              <Button onClick={handleAdminLogin} className="w-full">
+                Войти
+              </Button>
+            </div>
+          </Card>
+        </div>
+      )}
+
+      {isAdmin && (
+        <div className="fixed bottom-6 right-6 z-50">
+          <Card className="p-6 bg-card border-primary/50 shadow-2xl max-w-md">
+            <div className="flex items-center justify-between mb-4">
+              <div className="flex items-center gap-2">
+                <Icon name="TrendingUp" size={24} className="text-primary" />
+                <h3 className="text-xl font-bold">Аналитика прибыли</h3>
+              </div>
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={() => setIsAdmin(false)}
+              >
+                <Icon name="X" size={20} />
+              </Button>
+            </div>
+            <div className="space-y-4">
+              <div className="grid grid-cols-2 gap-4">
+                <div className="bg-primary/10 rounded-lg p-4">
+                  <p className="text-sm text-muted-foreground mb-1">За неделю</p>
+                  <p className="text-2xl font-bold text-primary">{revenue.week.toLocaleString()}₽</p>
+                </div>
+                <div className="bg-primary/10 rounded-lg p-4">
+                  <p className="text-sm text-muted-foreground mb-1">За месяц</p>
+                  <p className="text-2xl font-bold text-primary">{revenue.month.toLocaleString()}₽</p>
+                </div>
+                <div className="bg-primary/10 rounded-lg p-4">
+                  <p className="text-sm text-muted-foreground mb-1">За год</p>
+                  <p className="text-2xl font-bold text-primary">{revenue.year.toLocaleString()}₽</p>
+                </div>
+                <div className="bg-gradient-to-br from-primary to-secondary rounded-lg p-4">
+                  <p className="text-sm text-white/90 mb-1">Всего</p>
+                  <p className="text-2xl font-bold text-white">{revenue.total.toLocaleString()}₽</p>
+                </div>
+              </div>
+              <div className="pt-4 border-t border-border">
+                <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                  <Icon name="Info" size={16} />
+                  <span>Данные обновляются в реальном времени</span>
+                </div>
+              </div>
+            </div>
+          </Card>
+        </div>
+      )}
 
       <footer className="py-12 px-4 border-t border-border">
         <div className="container mx-auto max-w-6xl">
