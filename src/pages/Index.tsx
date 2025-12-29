@@ -134,9 +134,9 @@ const Index = () => {
     { 
       name: "Morok", 
       price: "500₽", 
-      features: ["☃️ Новогодний снеговик", "Уникальный скин", "10 домов", "Все команды"],
+      features: ["☃️ Новогодний снеговик", "🛡️ Дон-панель: /morok", "⬆️ Телепорт наверх: /top", "📋 Инфо по мутам/банам: /checkmute /checkban", "💰 Игровая зарплата: /salary"],
       special: true,
-      color: "from-cyan-400 to-blue-500"
+      color: "from-red-600 to-red-800"
     },
     { 
       name: "Custom", 
@@ -165,14 +165,28 @@ const Index = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-[#0a0f1a] via-[#0f1623] to-[#0a0f1a]">
+    <div className="min-h-screen bg-gradient-to-b from-[#0a0f1a] via-[#0f1623] to-[#0a0f1a] relative overflow-hidden">
+      <div className="snowflakes" aria-hidden="true">
+        <div className="snowflake">❅</div>
+        <div className="snowflake">❆</div>
+        <div className="snowflake">❅</div>
+        <div className="snowflake">❆</div>
+        <div className="snowflake">❅</div>
+        <div className="snowflake">❆</div>
+        <div className="snowflake">❅</div>
+        <div className="snowflake">❆</div>
+        <div className="snowflake">❅</div>
+        <div className="snowflake">❆</div>
+      </div>
       <nav className="fixed top-0 w-full bg-card/80 backdrop-blur-lg border-b border-border z-50">
         <div className="container mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
-            <div className="flex items-center gap-2">
-              <div className="w-10 h-10 bg-gradient-to-br from-primary to-secondary rounded-lg flex items-center justify-center">
-                <Icon name="Gamepad2" size={24} className="text-white" />
-              </div>
+            <div className="flex items-center gap-3">
+              <img 
+                src="https://cdn.poehali.dev/files/-1 (1) (2).png" 
+                alt="AsuxGrief Logo" 
+                className="w-12 h-12 rounded-lg object-cover"
+              />
               <h1 className="text-2xl font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
                 asuxgrief
               </h1>
@@ -246,9 +260,9 @@ const Index = () => {
               <Icon name="Server" size={20} className="text-primary" />
               <code className="text-lg font-mono text-primary">asuxgrief.ru</code>
             </div>
-            <div className="flex gap-4 justify-center">
+            <div className="flex gap-4 justify-center flex-wrap">
               <a 
-                href="https://t.me/your_telegram" 
+                href="https://t.me/asuxgrief" 
                 target="_blank" 
                 rel="noopener noreferrer"
                 className="inline-flex items-center gap-2 bg-gradient-to-r from-blue-500 to-blue-600 hover:opacity-90 text-white px-6 py-3 rounded-lg transition-opacity"
@@ -257,13 +271,22 @@ const Index = () => {
                 <span className="font-semibold">Telegram сообщество</span>
               </a>
               <a 
-                href="https://discord.gg/your_discord" 
+                href="https://discord.gg/4X3hd5a5mq" 
                 target="_blank" 
                 rel="noopener noreferrer"
                 className="inline-flex items-center gap-2 bg-gradient-to-r from-indigo-500 to-purple-600 hover:opacity-90 text-white px-6 py-3 rounded-lg transition-opacity"
               >
                 <Icon name="MessageCircle" size={20} />
                 <span className="font-semibold">Discord сообщество</span>
+              </a>
+              <a 
+                href="https://funpay.com/users/14617125/" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 bg-gradient-to-r from-orange-500 to-red-600 hover:opacity-90 text-white px-6 py-3 rounded-lg transition-opacity"
+              >
+                <Icon name="CreditCard" size={20} />
+                <span className="font-semibold">Оплата FunPay</span>
               </a>
             </div>
           </div>
