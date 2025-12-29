@@ -19,6 +19,11 @@ const Index = () => {
   const [newCoupon, setNewCoupon] = useState({ code: "", discount: 0, items: "" });
   const [appliedCoupon, setAppliedCoupon] = useState<any>(null);
   const [couponInput, setCouponInput] = useState("");
+  const [showServicesPanel, setShowServicesPanel] = useState(false);
+  const [showSettingsPanel, setShowSettingsPanel] = useState(false);
+  const [telegramLink, setTelegramLink] = useState("https://t.me/asuxgrief");
+  const [discordLink, setDiscordLink] = useState("https://discord.gg/4X3hd5a5mq");
+  const [funpayLink, setFunpayLink] = useState("https://funpay.com/users/14617125/");
 
   const revenue = {
     week: 12450,
@@ -126,7 +131,7 @@ const Index = () => {
     { 
       name: "Christmas", 
       price: "399₽", 
-      features: ["🎄 ЛИМИТИРОВАННЫЙ СТАТУС", "Новогодний кит", "Эксклюзивный префикс", "7 домов"],
+      features: ["🎄 ЛИМИТИРОВАННЫЙ СТАТУС", "🎁 Все права как у Morok", "🎀 Эксклюзивный набор", "⭐ Эксклюзивный префикс", "💵 Личная зарплата"],
       popular: true,
       limited: true,
       color: "from-red-600 to-green-600"
@@ -262,7 +267,7 @@ const Index = () => {
             </div>
             <div className="flex gap-4 justify-center flex-wrap">
               <a 
-                href="https://t.me/asuxgrief" 
+                href={telegramLink} 
                 target="_blank" 
                 rel="noopener noreferrer"
                 className="inline-flex items-center gap-2 bg-gradient-to-r from-blue-500 to-blue-600 hover:opacity-90 text-white px-6 py-3 rounded-lg transition-opacity"
@@ -271,22 +276,13 @@ const Index = () => {
                 <span className="font-semibold">Telegram сообщество</span>
               </a>
               <a 
-                href="https://discord.gg/4X3hd5a5mq" 
+                href={discordLink} 
                 target="_blank" 
                 rel="noopener noreferrer"
                 className="inline-flex items-center gap-2 bg-gradient-to-r from-indigo-500 to-purple-600 hover:opacity-90 text-white px-6 py-3 rounded-lg transition-opacity"
               >
                 <Icon name="MessageCircle" size={20} />
                 <span className="font-semibold">Discord сообщество</span>
-              </a>
-              <a 
-                href="https://funpay.com/users/14617125/" 
-                target="_blank" 
-                rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 bg-gradient-to-r from-orange-500 to-red-600 hover:opacity-90 text-white px-6 py-3 rounded-lg transition-opacity"
-              >
-                <Icon name="CreditCard" size={20} />
-                <span className="font-semibold">Оплата FunPay</span>
               </a>
             </div>
           </div>
@@ -309,19 +305,9 @@ const Index = () => {
         </div>
       </section>
 
-      <section id="donate" className="py-20 px-4 relative overflow-hidden">
-        <div className="absolute inset-0 opacity-10 pointer-events-none">
-          <img 
-            src="https://cdn.poehali.dev/projects/98412efd-c0e5-43db-be0c-3b985056cb51/files/36ecf729-b09f-4eae-b069-6bd20eb58714.jpg" 
-            alt="Новогодний снеговик" 
-            className="w-full h-full object-cover"
-          />
-        </div>
-        <div className="container mx-auto max-w-6xl relative z-10">
+      <section id="donate" className="py-20 px-4">
+        <div className="container mx-auto max-w-6xl">
           <div className="text-center mb-12">
-            <Badge className="bg-red-600 text-white border-0 mb-4 text-lg px-4 py-2">
-              🎄 Новогодняя распродажа!
-            </Badge>
             <h2 className="text-4xl font-bold mb-4">Донат привилегии</h2>
             <p className="text-muted-foreground">Поддержите сервер и получите уникальные возможности</p>
           </div>
@@ -631,6 +617,52 @@ const Index = () => {
               </div>
             )}
           </Card>
+
+          <Card className="p-6 bg-card border-primary/50 shadow-2xl max-w-md">
+            <div className="flex items-center justify-between mb-4">
+              <div className="flex items-center gap-2">
+                <Icon name="Settings" size={24} className="text-primary" />
+                <h3 className="text-xl font-bold">Настройки сайта</h3>
+              </div>
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={() => setShowSettingsPanel(!showSettingsPanel)}
+              >
+                <Icon name={showSettingsPanel ? "ChevronDown" : "ChevronUp"} size={20} />
+              </Button>
+            </div>
+            {showSettingsPanel && (
+              <div className="space-y-4">
+                <div>
+                  <label className="text-sm font-semibold mb-2 block">Ссылки на соцсети</label>
+                  <div className="space-y-2">
+                    <input
+                      type="text"
+                      placeholder="Telegram"
+                      value={telegramLink}
+                      onChange={(e) => setTelegramLink(e.target.value)}
+                      className="w-full bg-muted border border-border rounded-lg px-3 py-2 text-sm"
+                    />
+                    <input
+                      type="text"
+                      placeholder="Discord"
+                      value={discordLink}
+                      onChange={(e) => setDiscordLink(e.target.value)}
+                      className="w-full bg-muted border border-border rounded-lg px-3 py-2 text-sm"
+                    />
+                    <input
+                      type="text"
+                      placeholder="FunPay"
+                      value={funpayLink}
+                      onChange={(e) => setFunpayLink(e.target.value)}
+                      className="w-full bg-muted border border-border rounded-lg px-3 py-2 text-sm"
+                    />
+                  </div>
+                </div>
+              </div>
+            )}
+          </Card>
         </div>
       )}
 
@@ -707,9 +739,18 @@ const Index = () => {
                     <span>Итого:</span>
                     <span className="text-primary">{getTotalPrice()}₽</span>
                   </div>
-                  <Button className="w-full" size="lg">
-                    Оформить заказ
-                  </Button>
+                  <div className="bg-muted p-4 rounded-lg">
+                    <p className="text-sm font-semibold mb-2">Метод оплаты:</p>
+                    <a 
+                      href={funpayLink}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex items-center justify-center gap-2 bg-gradient-to-r from-orange-500 to-red-600 hover:opacity-90 text-white px-6 py-3 rounded-lg transition-opacity w-full"
+                    >
+                      <Icon name="CreditCard" size={20} />
+                      <span className="font-semibold">Оплатить через FunPay</span>
+                    </a>
+                  </div>
                 </div>
               </>
             )}
