@@ -20,23 +20,55 @@ const Index = () => {
 
   const donatePackages = [
     { 
-      name: "Стартовый", 
-      price: "299₽", 
-      features: ["Кастомный ник", "2 дома", "Доступ к /fly на 7 дней"],
+      name: "Pravitel", 
+      price: "49₽", 
+      features: ["Базовые привилегии", "1 дом", "Цветной ник"],
       color: "from-blue-600 to-blue-800"
     },
     { 
-      name: "VIP", 
-      price: "599₽", 
-      features: ["Цветной ник", "5 домов", "/fly навсегда", "Приватный кейс"],
-      popular: true,
+      name: "Vlastelin", 
+      price: "89₽", 
+      features: ["Расширенные права", "2 дома", "Кит ресурсов"],
+      color: "from-cyan-600 to-blue-700"
+    },
+    { 
+      name: "Elytrium", 
+      price: "149₽", 
+      features: ["Элитры", "3 дома", "Полет на 3 дня"],
+      color: "from-blue-500 to-cyan-600"
+    },
+    { 
+      name: "Xozyin", 
+      price: "219₽", 
+      features: ["Приват территории", "4 дома", "Уникальные команды"],
       color: "from-cyan-500 to-blue-600"
     },
     { 
-      name: "Легенда", 
-      price: "1299₽", 
-      features: ["Уникальный префикс", "10 домов", "Все команды", "Эксклюзивный кит"],
-      color: "from-blue-400 to-cyan-600"
+      name: "Christmas", 
+      price: "399₽", 
+      features: ["🎄 Лимитированный донат", "Новогодний кит", "Эксклюзивный префикс", "7 домов"],
+      popular: true,
+      limited: true,
+      color: "from-red-600 to-green-600"
+    },
+    { 
+      name: "Custom", 
+      price: "499₽", 
+      features: ["Кастомизация персонажа", "8 домов", "/fly навсегда"],
+      color: "from-blue-400 to-cyan-500"
+    },
+    { 
+      name: "Morok", 
+      price: "500₽", 
+      features: ["☃️ Новогодний снеговик", "Уникальный скин", "10 домов", "Все команды"],
+      special: true,
+      color: "from-cyan-400 to-blue-500"
+    },
+    { 
+      name: "Рубины", 
+      price: "1₽ за 100 шт", 
+      features: ["Игровая валюта", "Покупка в магазине", "Обмен с игроками"],
+      color: "from-red-500 to-pink-600"
     },
   ];
 
@@ -130,33 +162,55 @@ const Index = () => {
         </div>
       </section>
 
-      <section id="donate" className="py-20 px-4">
-        <div className="container mx-auto max-w-6xl">
-          <h2 className="text-4xl font-bold text-center mb-4">Донат привилегии</h2>
-          <p className="text-center text-muted-foreground mb-12">Поддержите сервер и получите уникальные возможности</p>
-          <div className="grid md:grid-cols-3 gap-6">
+      <section id="donate" className="py-20 px-4 relative overflow-hidden">
+        <div className="absolute inset-0 opacity-10 pointer-events-none">
+          <img 
+            src="https://cdn.poehali.dev/projects/98412efd-c0e5-43db-be0c-3b985056cb51/files/36ecf729-b09f-4eae-b069-6bd20eb58714.jpg" 
+            alt="Новогодний снеговик" 
+            className="w-full h-full object-cover"
+          />
+        </div>
+        <div className="container mx-auto max-w-6xl relative z-10">
+          <div className="text-center mb-12">
+            <Badge className="bg-red-600 text-white border-0 mb-4 text-lg px-4 py-2">
+              🎄 Новогодняя распродажа!
+            </Badge>
+            <h2 className="text-4xl font-bold mb-4">Донат привилегии</h2>
+            <p className="text-muted-foreground">Поддержите сервер и получите уникальные возможности</p>
+          </div>
+          <div className="grid md:grid-cols-4 gap-4">
             {donatePackages.map((pkg, idx) => (
               <Card 
                 key={idx}
-                className={`p-6 bg-gradient-to-br ${pkg.color} border-0 relative overflow-hidden hover:scale-105 transition-transform`}
+                className={`p-5 bg-gradient-to-br ${pkg.color} border-0 relative overflow-hidden hover:scale-105 transition-transform`}
               >
                 {pkg.popular && (
-                  <Badge className="absolute top-4 right-4 bg-yellow-500 text-black border-0">
-                    Популярное
+                  <Badge className="absolute top-3 right-3 bg-yellow-500 text-black border-0 text-xs">
+                    🔥 Популярное
+                  </Badge>
+                )}
+                {pkg.limited && (
+                  <Badge className="absolute top-3 right-3 bg-amber-500 text-white border-0 text-xs animate-pulse">
+                    ⏰ Лимитед
+                  </Badge>
+                )}
+                {pkg.special && (
+                  <Badge className="absolute top-3 right-3 bg-cyan-400 text-black border-0 text-xs">
+                    ⭐ Спецпредложение
                   </Badge>
                 )}
                 <div className="relative z-10">
-                  <h3 className="text-2xl font-bold mb-2 text-white">{pkg.name}</h3>
-                  <p className="text-4xl font-bold mb-6 text-white">{pkg.price}</p>
-                  <ul className="space-y-3 mb-6">
+                  <h3 className="text-xl font-bold mb-2 text-white">{pkg.name}</h3>
+                  <p className="text-3xl font-bold mb-4 text-white">{pkg.price}</p>
+                  <ul className="space-y-2 mb-4 min-h-[120px]">
                     {pkg.features.map((feature, fIdx) => (
-                      <li key={fIdx} className="flex items-start gap-2 text-white/90">
-                        <Icon name="Check" size={20} className="text-white mt-0.5 flex-shrink-0" />
+                      <li key={fIdx} className="flex items-start gap-2 text-white/90 text-sm">
+                        <Icon name="Check" size={16} className="text-white mt-0.5 flex-shrink-0" />
                         <span>{feature}</span>
                       </li>
                     ))}
                   </ul>
-                  <Button className="w-full bg-white text-black hover:bg-white/90">
+                  <Button className="w-full bg-white text-black hover:bg-white/90 text-sm py-2">
                     Приобрести
                   </Button>
                 </div>
