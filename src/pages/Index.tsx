@@ -21,9 +21,12 @@ const Index = () => {
   const [couponInput, setCouponInput] = useState("");
   const [showServicesPanel, setShowServicesPanel] = useState(false);
   const [showSettingsPanel, setShowSettingsPanel] = useState(false);
+  const [showDonatesPanel, setShowDonatesPanel] = useState(false);
   const [telegramLink, setTelegramLink] = useState("https://t.me/asuxgrief");
   const [discordLink, setDiscordLink] = useState("https://discord.gg/4X3hd5a5mq");
   const [funpayLink, setFunpayLink] = useState("https://funpay.com/users/14617125/");
+  const [donates, setDonates] = useState([]);
+  const [editingDonate, setEditingDonate] = useState<any>(null);
 
   const revenue = {
     week: 12450,
@@ -129,17 +132,9 @@ const Index = () => {
       color: "from-green-500 to-emerald-600"
     },
     { 
-      name: "Christmas", 
-      price: "399₽", 
-      features: ["🎄 ЛИМИТИРОВАННЫЙ СТАТУС", "🎁 Все права как у Morok", "🎀 Эксклюзивный набор", "⭐ Эксклюзивный префикс", "💵 Личная зарплата"],
-      popular: true,
-      limited: true,
-      color: "from-red-600 to-green-600"
-    },
-    { 
       name: "Morok", 
       price: "500₽", 
-      features: ["☃️ Новогодний снеговик", "🛡️ Дон-панель: /morok", "⬆️ Телепорт наверх: /top", "📋 Инфо по мутам/банам: /checkmute /checkban", "💰 Игровая зарплата: /salary"],
+      features: ["🛡️ Дон-панель: /morok", "⬆️ Телепорт наверх: /top", "📋 Инфо по мутам/банам: /checkmute /checkban", "💰 Игровая зарплата: /salary"],
       special: true,
       color: "from-red-600 to-red-800"
     },
@@ -150,6 +145,13 @@ const Index = () => {
       color: "from-purple-500 to-pink-600"
     },
   ];
+
+  const exclusiveDonate = {
+    name: "Christmas",
+    price: "399₽",
+    features: ["🎄 ЛИМИТИРОВАННЫЙ СТАТУС", "🎁 Все права как у Morok", "🎀 Эксклюзивный набор", "⭐ Эксклюзивный префикс", "💵 Личная зарплата"],
+    color: "from-red-600 to-green-600"
+  };
 
   const casePackages = [
     {
@@ -354,7 +356,39 @@ const Index = () => {
             ))}
           </div>
 
-          <div className="mt-12">
+          <div className="mt-16">
+            <h3 className="text-4xl font-bold text-center mb-4">🎄 Эксклюзивный донат</h3>
+            <p className="text-center text-muted-foreground mb-8">Ограниченное предложение только в новогодний период</p>
+            <div className="max-w-2xl mx-auto">
+              <Card 
+                className={`p-8 bg-gradient-to-br ${exclusiveDonate.color} border-0 relative overflow-hidden hover:scale-105 transition-transform`}
+              >
+                <Badge className="absolute top-4 right-4 bg-amber-500 text-white border-0 animate-pulse">
+                  ⏰ ЛИМИТИРОВАННЫЙ
+                </Badge>
+                <div className="relative z-10 text-center">
+                  <h3 className="text-3xl font-bold mb-3 text-white">{exclusiveDonate.name}</h3>
+                  <p className="text-5xl font-bold mb-6 text-white">{exclusiveDonate.price}</p>
+                  <ul className="space-y-3 mb-6 text-left max-w-md mx-auto">
+                    {exclusiveDonate.features.map((feature, fIdx) => (
+                      <li key={fIdx} className="flex items-start gap-3 text-white text-base">
+                        <Icon name="Star" size={20} className="text-yellow-300 mt-0.5 flex-shrink-0" />
+                        <span>{feature}</span>
+                      </li>
+                    ))}
+                  </ul>
+                  <Button 
+                    onClick={() => addToCart({ ...exclusiveDonate, type: 'donate' })}
+                    className="w-full bg-white text-black hover:bg-white/90 text-lg py-6 font-bold"
+                  >
+                    🎁 Купить эксклюзивный донат
+                  </Button>
+                </div>
+              </Card>
+            </div>
+          </div>
+
+          <div className="mt-16">
             <h3 className="text-3xl font-bold text-center mb-8">Игровые кейсы</h3>
             <div className="grid md:grid-cols-3 gap-6 max-w-4xl mx-auto">
               {casePackages.map((caseItem, idx) => (
@@ -415,8 +449,8 @@ const Index = () => {
                     </Button>
                   </div>
                   
-                  <div className="grid grid-cols-4 gap-2 mb-4">
-                    {[1, 5, 10, 50].map((amount) => (
+                  <div className="grid grid-cols-3 gap-2 mb-4">
+                    {[1, 5, 10, 50, 100, 150].map((amount) => (
                       <Button
                         key={amount}
                         onClick={() => setRubiesAmount(amount)}
@@ -658,6 +692,70 @@ const Index = () => {
                       onChange={(e) => setFunpayLink(e.target.value)}
                       className="w-full bg-muted border border-border rounded-lg px-3 py-2 text-sm"
                     />
+                  </div>
+                </div>
+              </div>
+            )}
+          </Card>
+
+          <Card className="p-6 bg-card border-primary/50 shadow-2xl max-w-md max-h-[70vh] overflow-y-auto">
+            <div className="flex items-center justify-between mb-4">
+              <div className="flex items-center gap-2">
+                <Icon name="Package" size={24} className="text-primary" />
+                <h3 className="text-xl font-bold">Управление донатами</h3>
+              </div>
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={() => setShowDonatesPanel(!showDonatesPanel)}
+              >
+                <Icon name={showDonatesPanel ? "ChevronDown" : "ChevronUp"} size={20} />
+              </Button>
+            </div>
+            {showDonatesPanel && (
+              <div className="space-y-4">
+                <p className="text-sm text-muted-foreground">
+                  Здесь вы можете редактировать донат-пакеты. Изменения применяются сразу на сайте.
+                </p>
+                <div className="space-y-3">
+                  {donatePackages.map((pkg, idx) => (
+                    <div key={idx} className="bg-muted p-3 rounded-lg">
+                      <div className="flex items-center justify-between mb-2">
+                        <p className="font-bold">{pkg.name}</p>
+                        <Badge variant="outline">{pkg.price}</Badge>
+                      </div>
+                      <p className="text-xs text-muted-foreground mb-2">
+                        {pkg.features.length} функций
+                      </p>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        className="w-full"
+                        onClick={() => setEditingDonate(pkg)}
+                      >
+                        <Icon name="Edit" size={14} className="mr-2" />
+                        Редактировать
+                      </Button>
+                    </div>
+                  ))}
+                  
+                  <div className="border-t pt-3">
+                    <p className="font-bold mb-2">Эксклюзивный донат</p>
+                    <div className="bg-muted p-3 rounded-lg">
+                      <div className="flex items-center justify-between mb-2">
+                        <p className="font-bold">{exclusiveDonate.name}</p>
+                        <Badge variant="outline">{exclusiveDonate.price}</Badge>
+                      </div>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        className="w-full"
+                        onClick={() => setEditingDonate(exclusiveDonate)}
+                      >
+                        <Icon name="Edit" size={14} className="mr-2" />
+                        Редактировать
+                      </Button>
+                    </div>
                   </div>
                 </div>
               </div>
