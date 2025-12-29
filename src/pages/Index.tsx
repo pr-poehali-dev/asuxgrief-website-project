@@ -2,8 +2,10 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import Icon from "@/components/ui/icon";
+import { useState } from "react";
 
 const Index = () => {
+  const [rubiesAmount, setRubiesAmount] = useState(1);
   const recentPurchases = [
     { player: "xXDarkKnightXx", item: "VIP Статус", price: "500₽", time: "2 мин назад" },
     { player: "ProGamer2024", item: "Алмазный ранг", price: "1200₽", time: "15 мин назад" },
@@ -64,12 +66,7 @@ const Index = () => {
       special: true,
       color: "from-cyan-400 to-blue-500"
     },
-    { 
-      name: "Рубины", 
-      price: "1₽ за 100 шт", 
-      features: ["Игровая валюта", "Покупка в магазине", "Обмен с игроками"],
-      color: "from-red-500 to-pink-600"
-    },
+
   ];
 
   return (
@@ -216,6 +213,74 @@ const Index = () => {
                 </div>
               </Card>
             ))}
+          </div>
+
+          <div className="mt-8 max-w-2xl mx-auto">
+            <Card className="p-6 bg-gradient-to-br from-red-500 to-pink-600 border-0">
+              <div className="text-center text-white">
+                <div className="flex items-center justify-center gap-2 mb-4">
+                  <Icon name="Gem" size={32} className="text-white" />
+                  <h3 className="text-2xl font-bold">Рубины</h3>
+                </div>
+                <p className="text-white/90 mb-6">Игровая валюта для покупок в магазине</p>
+                
+                <div className="bg-white/20 backdrop-blur-sm rounded-lg p-6 mb-6">
+                  <div className="flex items-center justify-center gap-4 mb-4">
+                    <Button 
+                      onClick={() => setRubiesAmount(Math.max(1, rubiesAmount - 1))}
+                      className="bg-white/30 hover:bg-white/40 text-white border-0"
+                      size="icon"
+                    >
+                      <Icon name="Minus" size={20} />
+                    </Button>
+                    <div className="text-center">
+                      <p className="text-5xl font-bold text-white">{rubiesAmount}₽</p>
+                      <p className="text-white/80 mt-2">= {rubiesAmount * 100} рубинов</p>
+                    </div>
+                    <Button 
+                      onClick={() => setRubiesAmount(rubiesAmount + 1)}
+                      className="bg-white/30 hover:bg-white/40 text-white border-0"
+                      size="icon"
+                    >
+                      <Icon name="Plus" size={20} />
+                    </Button>
+                  </div>
+                  
+                  <div className="grid grid-cols-4 gap-2 mb-4">
+                    {[1, 5, 10, 50].map((amount) => (
+                      <Button
+                        key={amount}
+                        onClick={() => setRubiesAmount(amount)}
+                        variant={rubiesAmount === amount ? "default" : "outline"}
+                        className={rubiesAmount === amount ? "bg-white text-pink-600" : "bg-white/20 text-white border-white/30 hover:bg-white/30"}
+                        size="sm"
+                      >
+                        {amount}₽
+                      </Button>
+                    ))}
+                  </div>
+                </div>
+
+                <ul className="space-y-2 mb-6 text-left">
+                  <li className="flex items-start gap-2 text-white/90">
+                    <Icon name="Check" size={16} className="text-white mt-0.5 flex-shrink-0" />
+                    <span>Моментальное зачисление</span>
+                  </li>
+                  <li className="flex items-start gap-2 text-white/90">
+                    <Icon name="Check" size={16} className="text-white mt-0.5 flex-shrink-0" />
+                    <span>Покупка в игровом магазине</span>
+                  </li>
+                  <li className="flex items-start gap-2 text-white/90">
+                    <Icon name="Check" size={16} className="text-white mt-0.5 flex-shrink-0" />
+                    <span>Обмен с другими игроками</span>
+                  </li>
+                </ul>
+
+                <Button className="w-full bg-white text-pink-600 hover:bg-white/90 font-bold">
+                  Купить за {rubiesAmount}₽
+                </Button>
+              </div>
+            </Card>
           </div>
         </div>
       </section>
