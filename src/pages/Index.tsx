@@ -31,50 +31,59 @@ const Index = () => {
   ];
 
   const rules = [
-    { title: "Запрещен читерство", description: "Использование любых модификаций запрещено" },
-    { title: "Уважение к игрокам", description: "Оскорбления и токсичность караются баном" },
-    { title: "Запрет гриферства", description: "Разрушение чужих построек запрещено" },
-    { title: "Честная игра", description: "Используйте только разрешенные механики" },
+    { section: "1.0", title: "Общая информация", description: "Настоящий свод правил создан проектом AsuxGrief и применяются в рамках сервера AsuxGrief" },
+    
+    { section: "1.1", title: "Спам (флуд)", description: "Мут на 30 мин" },
+    { section: "1.1.2", title: "Пиар проектов", description: "Бан навсегда" },
+    { section: "1.2", title: "Массивное оскорбление", description: "Мут на 1 час" },
+    { section: "1.3", title: "Организация флуда через опрос", description: "Мут на 4 часа" },
+    { section: "1.4", title: "Упоминание родителей", description: "Мут на 7 дней" },
+    { section: "1.4.1", title: "Оскорбление проекта и модераторов", description: "Мут на 12 часов" },
+    
+    { section: "1.5", title: "Использование читов", description: "Бан на 14 дней" },
+    { section: "1.5.1", title: "Тим с читером", description: "Бан на 8 дней" },
+    { section: "1.5.2", title: "Клан читеров", description: "Бан на 14 дней каждого" },
+    { section: "1.6", title: "Признание в читах", description: "Бан на 12 дней" },
+    { section: "1.7", title: "Ник как у администрации", description: "Бан навсегда" },
+    { section: "1.8", title: "DDoS пакеты", description: "Бан на 28 дней" },
+    { section: "1.8.1", title: "Краш сервера", description: "Бан навсегда" },
+    { section: "1.9", title: "Отказ от проверки", description: "Бан на 14 дней" },
+    { section: "2.0", title: "Задержка модератора", description: "Бан на 16 дней" },
+    { section: "2.1", title: "Выдавать себя за модерацию", description: "Бан на 20 дней" },
+    { section: "2.5", title: "Более 5 аккаунтов в бане", description: "Бан на 14 дней каждый новый" },
+    
+    { section: "2.2", title: "Некорректный TP", description: "Варн" },
+    { section: "2.3", title: "Взятка", description: "Снятие" },
+    { section: "2.4", title: "Выдача админских предметов", description: "Варн" },
+    { section: "2.5", title: "Некорректный мут", description: "Варн" },
   ];
 
   const donatePackages = [
     { 
       name: "Pravitel", 
       price: "49₽", 
-      features: ["Базовые привилегии", "1 дом", "Цветной ник"],
-      color: "from-blue-600 to-blue-800"
+      features: ["🎭 Надеть блок на голову: /hat", "👥 Игроки рядом: /near"],
+      color: "from-emerald-400 to-teal-500"
     },
     { 
-      name: "Vlastelin", 
-      price: "89₽", 
-      features: ["Расширенные права", "2 дома", "Кит ресурсов"],
-      color: "from-cyan-600 to-blue-700"
+      name: "Orion", 
+      price: "299₽", 
+      features: ["🛡️ Дон-панель: /orion", "🎁 Подарить донат: /grant", "📊 Статистика аккаунтов: /dupeip"],
+      color: "from-blue-500 to-indigo-600"
     },
     { 
-      name: "Elytrium", 
-      price: "149₽", 
-      features: ["Элитры", "3 дома", "Полет на 3 дня"],
-      color: "from-blue-500 to-cyan-600"
-    },
-    { 
-      name: "Xozyin", 
+      name: "Xozyain", 
       price: "219₽", 
-      features: ["Приват территории", "4 дома", "Уникальные команды"],
-      color: "from-cyan-500 to-blue-600"
+      features: ["⚡ Ударить молнией: /thor", "🌧️ Штормовая погода: /rain", "❤️ Исцелить себя: /heal", "📍 Установить варп: /setwarp", "🚫 Список банов: /banlist"],
+      color: "from-green-500 to-emerald-600"
     },
     { 
       name: "Christmas", 
       price: "399₽", 
-      features: ["🎄 Лимитированный донат", "Новогодний кит", "Эксклюзивный префикс", "7 домов"],
+      features: ["🎄 ЛИМИТИРОВАННЫЙ СТАТУС", "Новогодний кит", "Эксклюзивный префикс", "7 домов"],
       popular: true,
       limited: true,
       color: "from-red-600 to-green-600"
-    },
-    { 
-      name: "Custom", 
-      price: "499₽", 
-      features: ["Кастомизация персонажа", "8 домов", "/fly навсегда"],
-      color: "from-blue-400 to-cyan-500"
     },
     { 
       name: "Morok", 
@@ -83,7 +92,30 @@ const Index = () => {
       special: true,
       color: "from-cyan-400 to-blue-500"
     },
+    { 
+      name: "Custom", 
+      price: "799₽", 
+      features: ["🎨 Индивидуальный донат по вашему запросу", "📧 Киньте админу фото с покупкой", "⏱️ Получите привилегию за 2 дня", "👑 Права как у Morok"],
+      color: "from-purple-500 to-pink-600"
+    },
+  ];
 
+  const casePackages = [
+    {
+      name: "Донатный кейс",
+      price: "79₽",
+      color: "from-amber-500 to-orange-600"
+    },
+    {
+      name: "Монетный кейс",
+      price: "15₽",
+      color: "from-yellow-400 to-amber-500"
+    },
+    {
+      name: "Кейс с рубинами",
+      price: "20₽",
+      color: "from-rose-500 to-red-600"
+    },
   ];
 
   return (
@@ -241,7 +273,34 @@ const Index = () => {
             ))}
           </div>
 
-          <div className="mt-8 max-w-2xl mx-auto">
+          <div className="mt-12">
+            <h3 className="text-3xl font-bold text-center mb-8">Игровые кейсы</h3>
+            <div className="grid md:grid-cols-3 gap-6 max-w-4xl mx-auto">
+              {casePackages.map((caseItem, idx) => (
+                <Card 
+                  key={idx}
+                  className={`p-6 bg-gradient-to-br ${caseItem.color} border-0 relative overflow-hidden hover:scale-105 transition-transform`}
+                >
+                  <div className="relative z-10 text-center">
+                    <div className="mb-4 flex justify-center">
+                      <img 
+                        src="https://cdn.poehali.dev/projects/98412efd-c0e5-43db-be0c-3b985056cb51/files/beb736df-3613-41cf-94bf-98a68bc62e10.jpg"
+                        alt="Кейс"
+                        className="w-24 h-24 object-contain"
+                      />
+                    </div>
+                    <h3 className="text-xl font-bold mb-2 text-white">{caseItem.name}</h3>
+                    <p className="text-3xl font-bold mb-4 text-white">{caseItem.price}</p>
+                    <Button className="w-full bg-white text-black hover:bg-white/90 font-bold">
+                      Открыть кейс
+                    </Button>
+                  </div>
+                </Card>
+              ))}
+            </div>
+          </div>
+
+          <div className="mt-12 max-w-2xl mx-auto">
             <Card className="p-6 bg-gradient-to-br from-red-500 to-pink-600 border-0">
               <div className="text-center text-white">
                 <div className="flex items-center justify-center gap-2 mb-4">
@@ -312,23 +371,28 @@ const Index = () => {
       </section>
 
       <section id="rules" className="py-20 px-4 bg-gradient-to-b from-transparent via-primary/5 to-transparent">
-        <div className="container mx-auto max-w-4xl">
-          <h2 className="text-4xl font-bold text-center mb-12">Правила сервера</h2>
-          <div className="space-y-4">
+        <div className="container mx-auto max-w-5xl">
+          <h2 className="text-4xl font-bold text-center mb-12">Правила сервера AsuxGrief</h2>
+          <div className="space-y-3">
             {rules.map((rule, idx) => (
-              <Card key={idx} className="p-6 bg-card border-border hover:border-primary/50 transition-colors">
-                <div className="flex items-start gap-4">
-                  <div className="w-10 h-10 bg-primary/20 rounded-full flex items-center justify-center flex-shrink-0">
-                    <span className="text-primary font-bold">{idx + 1}</span>
+              <Card key={idx} className="p-4 bg-card border-border hover:border-primary/50 transition-colors">
+                <div className="flex items-start gap-3">
+                  <div className="min-w-[60px] h-10 bg-primary/20 rounded-lg flex items-center justify-center flex-shrink-0">
+                    <span className="text-primary font-bold text-sm">{rule.section}</span>
                   </div>
-                  <div>
-                    <h3 className="text-xl font-semibold mb-1">{rule.title}</h3>
-                    <p className="text-muted-foreground">{rule.description}</p>
+                  <div className="flex-1">
+                    <h3 className="text-lg font-semibold mb-1">{rule.title}</h3>
+                    <p className="text-muted-foreground text-sm">{rule.description}</p>
                   </div>
                 </div>
               </Card>
             ))}
           </div>
+          <Card className="mt-8 p-6 bg-primary/10 border-primary/30">
+            <p className="text-center text-sm text-muted-foreground">
+              ⚠️ Выдавать мут и бан строго по правилам проекта по пунктам (например: 1.2). Выдача наказания не по пункту — варн!
+            </p>
+          </Card>
         </div>
       </section>
 
