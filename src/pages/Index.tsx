@@ -9,6 +9,16 @@ const Index = () => {
   const [isAdmin, setIsAdmin] = useState(false);
   const [showAdminPanel, setShowAdminPanel] = useState(false);
   const [adminPassword, setAdminPassword] = useState("");
+  const [cart, setCart] = useState<any[]>([]);
+  const [showCart, setShowCart] = useState(false);
+  const [showCoupons, setShowCoupons] = useState(false);
+  const [coupons, setCoupons] = useState([
+    { id: 1, code: "NEWYEAR2024", discount: 20, items: ["Christmas", "Morok"] },
+    { id: 2, code: "FIRSTBUY", discount: 15, items: ["all"] },
+  ]);
+  const [newCoupon, setNewCoupon] = useState({ code: "", discount: 0, items: "" });
+  const [appliedCoupon, setAppliedCoupon] = useState<any>(null);
+  const [couponInput, setCouponInput] = useState("");
 
   const revenue = {
     week: 12450,
@@ -23,12 +33,48 @@ const Index = () => {
       setShowAdminPanel(false);
     }
   };
-  const recentPurchases = [
-    { player: "xXDarkKnightXx", item: "VIP Статус", price: "500₽", time: "2 мин назад" },
-    { player: "ProGamer2024", item: "Алмазный ранг", price: "1200₽", time: "15 мин назад" },
-    { player: "SteveMiner", item: "Набор ресурсов", price: "300₽", time: "1 час назад" },
-    { player: "CreeperHunter", item: "Легендарный кейс", price: "800₽", time: "2 часа назад" },
-  ];
+  const addToCart = (item: any) => {
+    setCart([...cart, { ...item, id: Date.now() }]);
+  };
+
+  const removeFromCart = (id: number) => {
+    setCart(cart.filter(item => item.id !== id));
+  };
+
+  const applyCoupon = () => {
+    const coupon = coupons.find(c => c.code === couponInput.toUpperCase());
+    if (coupon) {
+      setAppliedCoupon(coupon);
+    }
+  };
+
+  const getDiscountedPrice = (item: any) => {
+    if (!appliedCoupon) return parseInt(item.price);
+    if (appliedCoupon.items.includes("all") || appliedCoupon.items.includes(item.name)) {
+      return parseInt(item.price) * (1 - appliedCoupon.discount / 100);
+    }
+    return parseInt(item.price);
+  };
+
+  const getTotalPrice = () => {
+    return cart.reduce((sum, item) => sum + getDiscountedPrice(item), 0);
+  };
+
+  const addCoupon = () => {
+    if (newCoupon.code && newCoupon.discount > 0) {
+      setCoupons([...coupons, {
+        id: Date.now(),
+        code: newCoupon.code.toUpperCase(),
+        discount: newCoupon.discount,
+        items: newCoupon.items.split(",").map(i => i.trim())
+      }]);
+      setNewCoupon({ code: "", discount: 0, items: "" });
+    }
+  };
+
+  const deleteCoupon = (id: number) => {
+    setCoupons(coupons.filter(c => c.id !== id));
+  };
 
   const rules = [
     { section: "1.0", title: "Общая информация", description: "Настоящий свод правил создан проектом AsuxGrief и применяются в рамках сервера AsuxGrief" },
@@ -135,7 +181,17 @@ const Index = () => {
               <a href="#about" className="hover:text-primary transition-colors">О сервере</a>
               <a href="#donate" className="hover:text-primary transition-colors">Донаты</a>
               <a href="#rules" className="hover:text-primary transition-colors">Правила</a>
-              <a href="#purchases" className="hover:text-primary transition-colors">Покупки</a>
+              <button
+                onClick={() => setShowCart(true)}
+                className="text-muted-foreground hover:text-primary transition-colors relative"
+              >
+                <Icon name="ShoppingCart" size={20} />
+                {cart.length > 0 && (
+                  <Badge className="absolute -top-2 -right-2 w-5 h-5 p-0 flex items-center justify-center bg-primary text-white text-xs">
+                    {cart.length}
+                  </Badge>
+                )}
+              </button>
               <button
                 onClick={() => setShowAdminPanel(true)}
                 className="text-muted-foreground hover:text-primary transition-colors"
@@ -186,12 +242,32 @@ const Index = () => {
         <div className="container mx-auto max-w-6xl">
           <h2 className="text-4xl font-bold text-center mb-12">О сервере</h2>
           <div className="text-center mb-8">
-            <div className="inline-flex items-center gap-2 bg-card border border-primary/30 rounded-lg px-6 py-3">
+            <div className="inline-flex items-center gap-2 bg-card border border-primary/30 rounded-lg px-6 py-3 mb-6">
               <Icon name="Server" size={20} className="text-primary" />
               <code className="text-lg font-mono text-primary">asuxgrief.ru</code>
             </div>
+            <div className="flex gap-4 justify-center">
+              <a 
+                href="https://t.me/your_telegram" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 bg-gradient-to-r from-blue-500 to-blue-600 hover:opacity-90 text-white px-6 py-3 rounded-lg transition-opacity"
+              >
+                <Icon name="Send" size={20} />
+                <span className="font-semibold">Telegram сообщество</span>
+              </a>
+              <a 
+                href="https://discord.gg/your_discord" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 bg-gradient-to-r from-indigo-500 to-purple-600 hover:opacity-90 text-white px-6 py-3 rounded-lg transition-opacity"
+              >
+                <Icon name="MessageCircle" size={20} />
+                <span className="font-semibold">Discord сообщество</span>
+              </a>
+            </div>
           </div>
-          <div className="grid md:grid-cols-3 gap-6">
+          <div className="grid md:grid-cols-2 gap-6">
             <Card className="p-6 bg-card border-border hover:border-primary/50 transition-all hover:scale-105">
               <div className="w-12 h-12 bg-gradient-to-br from-primary to-secondary rounded-lg flex items-center justify-center mb-4">
                 <Icon name="Users" size={24} className="text-white" />
@@ -201,17 +277,10 @@ const Index = () => {
             </Card>
             <Card className="p-6 bg-card border-border hover:border-primary/50 transition-all hover:scale-105">
               <div className="w-12 h-12 bg-gradient-to-br from-primary to-secondary rounded-lg flex items-center justify-center mb-4">
-                <Icon name="Shield" size={24} className="text-white" />
+                <Icon name="Pickaxe" size={24} className="text-white" />
               </div>
-              <h3 className="text-xl font-semibold mb-2">Защита от читеров</h3>
-              <p className="text-muted-foreground">Мощный античит и активная модерация 24/7. Честная игра гарантирована!</p>
-            </Card>
-            <Card className="p-6 bg-card border-border hover:border-primary/50 transition-all hover:scale-105">
-              <div className="w-12 h-12 bg-gradient-to-br from-primary to-secondary rounded-lg flex items-center justify-center mb-4">
-                <Icon name="Sparkles" size={24} className="text-white" />
-              </div>
-              <h3 className="text-xl font-semibold mb-2">Уникальные режимы</h3>
-              <p className="text-muted-foreground">Гриф, выживание, мини-игры и эксклюзивные режимы, которых нет нигде!</p>
+              <h3 className="text-xl font-semibold mb-2">Гриф режим</h3>
+              <p className="text-muted-foreground">Уникальный гриф-сервер с честной игрой и без привилегий!</p>
             </Card>
           </div>
         </div>
@@ -265,8 +334,11 @@ const Index = () => {
                       </li>
                     ))}
                   </ul>
-                  <Button className="w-full bg-white text-black hover:bg-white/90 text-sm py-2">
-                    Приобрести
+                  <Button 
+                    onClick={() => addToCart({ ...pkg, type: 'donate' })}
+                    className="w-full bg-white text-black hover:bg-white/90 text-sm py-2"
+                  >
+                    В корзину
                   </Button>
                 </div>
               </Card>
@@ -291,8 +363,11 @@ const Index = () => {
                     </div>
                     <h3 className="text-xl font-bold mb-2 text-white">{caseItem.name}</h3>
                     <p className="text-3xl font-bold mb-4 text-white">{caseItem.price}</p>
-                    <Button className="w-full bg-white text-black hover:bg-white/90 font-bold">
-                      Открыть кейс
+                    <Button 
+                      onClick={() => addToCart({ ...caseItem, type: 'case' })}
+                      className="w-full bg-white text-black hover:bg-white/90 font-bold"
+                    >
+                      Приобрести
                     </Button>
                   </div>
                 </Card>
@@ -396,33 +471,7 @@ const Index = () => {
         </div>
       </section>
 
-      <section id="purchases" className="py-20 px-4">
-        <div className="container mx-auto max-w-4xl">
-          <h2 className="text-4xl font-bold text-center mb-4">Последние покупки</h2>
-          <p className="text-center text-muted-foreground mb-12">Другие игроки уже поддержали сервер</p>
-          <div className="space-y-3">
-            {recentPurchases.map((purchase, idx) => (
-              <Card key={idx} className="p-4 bg-card border-border hover:border-primary/50 transition-all animate-fade-in" style={{ animationDelay: `${idx * 0.1}s` }}>
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-4">
-                    <div className="w-12 h-12 bg-gradient-to-br from-primary to-secondary rounded-full flex items-center justify-center">
-                      <Icon name="User" size={20} className="text-white" />
-                    </div>
-                    <div>
-                      <p className="font-semibold">{purchase.player}</p>
-                      <p className="text-sm text-muted-foreground">{purchase.item}</p>
-                    </div>
-                  </div>
-                  <div className="text-right">
-                    <p className="font-bold text-primary">{purchase.price}</p>
-                    <p className="text-xs text-muted-foreground">{purchase.time}</p>
-                  </div>
-                </div>
-              </Card>
-            ))}
-          </div>
-        </div>
-      </section>
+
 
       {showAdminPanel && !isAdmin && (
         <div className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
@@ -458,7 +507,7 @@ const Index = () => {
       )}
 
       {isAdmin && (
-        <div className="fixed bottom-6 right-6 z-50">
+        <div className="fixed bottom-6 right-6 z-50 space-y-4">
           <Card className="p-6 bg-card border-primary/50 shadow-2xl max-w-md">
             <div className="flex items-center justify-between mb-4">
               <div className="flex items-center gap-2">
@@ -492,13 +541,155 @@ const Index = () => {
                   <p className="text-2xl font-bold text-white">{revenue.total.toLocaleString()}₽</p>
                 </div>
               </div>
-              <div className="pt-4 border-t border-border">
-                <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                  <Icon name="Info" size={16} />
-                  <span>Данные обновляются в реальном времени</span>
+            </div>
+          </Card>
+
+          <Card className="p-6 bg-card border-primary/50 shadow-2xl max-w-md">
+            <div className="flex items-center justify-between mb-4">
+              <div className="flex items-center gap-2">
+                <Icon name="Ticket" size={24} className="text-primary" />
+                <h3 className="text-xl font-bold">Управление купонами</h3>
+              </div>
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={() => setShowCoupons(!showCoupons)}
+              >
+                <Icon name={showCoupons ? "ChevronDown" : "ChevronUp"} size={20} />
+              </Button>
+            </div>
+            {showCoupons && (
+              <div className="space-y-4">
+                <div className="space-y-2">
+                  {coupons.map((coupon) => (
+                    <div key={coupon.id} className="flex items-center justify-between bg-muted p-3 rounded-lg">
+                      <div>
+                        <p className="font-bold text-sm">{coupon.code}</p>
+                        <p className="text-xs text-muted-foreground">
+                          {coupon.discount}% на {coupon.items.join(", ")}
+                        </p>
+                      </div>
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        onClick={() => deleteCoupon(coupon.id)}
+                      >
+                        <Icon name="Trash2" size={16} />
+                      </Button>
+                    </div>
+                  ))}
+                </div>
+                <div className="space-y-2 pt-4 border-t">
+                  <input
+                    type="text"
+                    placeholder="Код купона"
+                    value={newCoupon.code}
+                    onChange={(e) => setNewCoupon({...newCoupon, code: e.target.value})}
+                    className="w-full bg-muted border border-border rounded-lg px-3 py-2 text-sm"
+                  />
+                  <input
+                    type="number"
+                    placeholder="Скидка %"
+                    value={newCoupon.discount || ""}
+                    onChange={(e) => setNewCoupon({...newCoupon, discount: parseInt(e.target.value) || 0})}
+                    className="w-full bg-muted border border-border rounded-lg px-3 py-2 text-sm"
+                  />
+                  <input
+                    type="text"
+                    placeholder="Товары (через запятую или 'all')"
+                    value={newCoupon.items}
+                    onChange={(e) => setNewCoupon({...newCoupon, items: e.target.value})}
+                    className="w-full bg-muted border border-border rounded-lg px-3 py-2 text-sm"
+                  />
+                  <Button onClick={addCoupon} className="w-full" size="sm">
+                    Добавить купон
+                  </Button>
                 </div>
               </div>
+            )}
+          </Card>
+        </div>
+      )}
+
+      {showCart && (
+        <div className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+          <Card className="max-w-2xl w-full max-h-[90vh] overflow-y-auto p-6 bg-card">
+            <div className="flex items-center justify-between mb-6">
+              <h3 className="text-2xl font-bold">Корзина</h3>
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={() => setShowCart(false)}
+              >
+                <Icon name="X" size={20} />
+              </Button>
             </div>
+
+            {cart.length === 0 ? (
+              <div className="text-center py-12">
+                <Icon name="ShoppingCart" size={48} className="mx-auto text-muted-foreground mb-4" />
+                <p className="text-muted-foreground">Корзина пуста</p>
+              </div>
+            ) : (
+              <>
+                <div className="space-y-3 mb-6">
+                  {cart.map((item) => (
+                    <Card key={item.id} className="p-4 bg-muted">
+                      <div className="flex items-center justify-between">
+                        <div>
+                          <p className="font-semibold">{item.name}</p>
+                          <p className="text-sm text-muted-foreground">{item.type === 'donate' ? 'Донат' : item.type === 'case' ? 'Кейс' : 'Рубины'}</p>
+                        </div>
+                        <div className="flex items-center gap-4">
+                          <div className="text-right">
+                            {appliedCoupon && (appliedCoupon.items.includes("all") || appliedCoupon.items.includes(item.name)) && (
+                              <p className="text-xs text-muted-foreground line-through">{item.price}</p>
+                            )}
+                            <p className="font-bold text-primary">{getDiscountedPrice(item)}₽</p>
+                          </div>
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            onClick={() => removeFromCart(item.id)}
+                          >
+                            <Icon name="Trash2" size={16} />
+                          </Button>
+                        </div>
+                      </div>
+                    </Card>
+                  ))}
+                </div>
+
+                <div className="space-y-4 pt-4 border-t">
+                  <div className="flex gap-2">
+                    <input
+                      type="text"
+                      placeholder="Введите код купона"
+                      value={couponInput}
+                      onChange={(e) => setCouponInput(e.target.value)}
+                      className="flex-1 bg-muted border border-border rounded-lg px-4 py-2"
+                    />
+                    <Button onClick={applyCoupon}>
+                      Применить
+                    </Button>
+                  </div>
+                  {appliedCoupon && (
+                    <div className="bg-green-500/10 border border-green-500/30 rounded-lg p-3">
+                      <p className="text-sm text-green-500">
+                        ✓ Купон {appliedCoupon.code} применён! Скидка {appliedCoupon.discount}%
+                      </p>
+                    </div>
+                  )}
+                  <div className="flex items-center justify-between text-xl font-bold">
+                    <span>Итого:</span>
+                    <span className="text-primary">{getTotalPrice()}₽</span>
+                  </div>
+                  <Button className="w-full" size="lg">
+                    Оформить заказ
+                  </Button>
+                </div>
+              </>
+            )}
           </Card>
         </div>
       )}
