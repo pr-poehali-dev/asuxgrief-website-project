@@ -15,6 +15,8 @@ const Index = () => {
   const [coupons, setCoupons] = useState([
     { id: 1, code: "NEWYEAR2024", discount: 20, items: ["Christmas", "Morok"] },
     { id: 2, code: "FIRSTBUY", discount: 15, items: ["all"] },
+    { id: 3, code: "FASTPEKOV", discount: 10, items: ["all"] },
+    { id: 4, code: "MOLCOS", discount: 10, items: ["all"] },
   ]);
   const [newCoupon, setNewCoupon] = useState({ code: "", discount: 0, items: "" });
   const [appliedCoupon, setAppliedCoupon] = useState<any>(null);
@@ -28,12 +30,6 @@ const Index = () => {
   const [donates, setDonates] = useState([]);
   const [editingDonate, setEditingDonate] = useState<any>(null);
   const [showSBPPayment, setShowSBPPayment] = useState(false);
-  const [showYoutubersPanel, setShowYoutubersPanel] = useState(false);
-  const [youtubers, setYoutubers] = useState([
-    { id: 1, name: "fastpekov", subscribers: "50K", channelUrl: "https://youtube.com/@fastpekov" },
-    { id: 2, name: "molcos", subscribers: "25K", channelUrl: "https://youtube.com/@molcos" },
-  ]);
-  const [newYoutuber, setNewYoutuber] = useState({ name: "", subscribers: "", channelUrl: "" });
 
   const revenue = {
     week: 12450,
@@ -206,10 +202,9 @@ const Index = () => {
               </h1>
             </div>
             <div className="hidden md:flex gap-6 items-center">
-              <a href="#about" className="hover:text-primary transition-colors">О сервере</a>
-              <a href="#donate" className="hover:text-primary transition-colors">Донаты</a>
-              <a href="#rules" className="hover:text-primary transition-colors">Правила</a>
-              <a href="#youtubers" className="hover:text-primary transition-colors">Ютуберы</a>
+              <a href="#about" className="hover:text-primary transition-all duration-300 hover:scale-110">О сервере</a>
+              <a href="#donate" className="hover:text-primary transition-all duration-300 hover:scale-110">Донаты</a>
+              <a href="#rules" className="hover:text-primary transition-all duration-300 hover:scale-110">Правила</a>
               <button
                 onClick={() => setShowCart(true)}
                 className="text-muted-foreground hover:text-primary transition-colors relative"
@@ -297,14 +292,14 @@ const Index = () => {
             </div>
           </div>
           <div className="grid md:grid-cols-2 gap-6">
-            <Card className="p-6 bg-card border-border hover:border-primary/50 transition-all hover:scale-105">
+            <Card className="p-6 bg-card border-border hover:border-primary/50 hover:shadow-xl transition-all duration-300 hover:scale-105 animate-fade-in" style={{ animationDelay: '0.1s' }}>
               <div className="w-12 h-12 bg-gradient-to-br from-primary to-secondary rounded-lg flex items-center justify-center mb-4">
                 <Icon name="Users" size={24} className="text-white" />
               </div>
               <h3 className="text-xl font-semibold mb-2">Активное комьюнити</h3>
               <p className="text-muted-foreground">Более 50 игроков в нашем Discord сообществе. Новые друзья каждый день!</p>
             </Card>
-            <Card className="p-6 bg-card border-border hover:border-primary/50 transition-all hover:scale-105">
+            <Card className="p-6 bg-card border-border hover:border-primary/50 hover:shadow-xl transition-all duration-300 hover:scale-105 animate-fade-in" style={{ animationDelay: '0.2s' }}>
               <div className="w-12 h-12 bg-gradient-to-br from-primary to-secondary rounded-lg flex items-center justify-center mb-4">
                 <Icon name="Pickaxe" size={24} className="text-white" />
               </div>
@@ -325,7 +320,8 @@ const Index = () => {
             {donatePackages.map((pkg, idx) => (
               <Card 
                 key={idx}
-                className={`p-5 bg-gradient-to-br ${pkg.color} border-0 relative overflow-hidden hover:scale-105 transition-transform`}
+                className={`p-5 bg-gradient-to-br ${pkg.color} border-0 relative overflow-hidden hover:scale-105 hover:shadow-2xl transition-all duration-300 animate-fade-in`}
+                style={{ animationDelay: `${idx * 0.1}s` }}
               >
                 {pkg.popular && (
                   <Badge className="absolute top-3 right-3 bg-yellow-500 text-black border-0 text-xs">
@@ -369,7 +365,7 @@ const Index = () => {
             <p className="text-center text-muted-foreground mb-8">Ограниченное предложение только в новогодний период</p>
             <div className="max-w-2xl mx-auto">
               <Card 
-                className={`p-8 bg-gradient-to-br ${exclusiveDonate.color} border-0 relative overflow-hidden hover:scale-105 transition-transform`}
+                className={`p-8 bg-gradient-to-br ${exclusiveDonate.color} border-0 relative overflow-hidden hover:scale-105 hover:shadow-2xl transition-all duration-300 animate-fade-in`}
               >
                 <Badge className="absolute top-4 right-4 bg-amber-500 text-white border-0 animate-pulse">
                   ⏰ ЛИМИТИРОВАННЫЙ
@@ -402,7 +398,8 @@ const Index = () => {
               {casePackages.map((caseItem, idx) => (
                 <Card 
                   key={idx}
-                  className={`p-6 bg-gradient-to-br ${caseItem.color} border-0 relative overflow-hidden hover:scale-105 transition-transform`}
+                  className={`p-6 bg-gradient-to-br ${caseItem.color} border-0 relative overflow-hidden hover:scale-105 hover:shadow-2xl transition-all duration-300 animate-fade-in`}
+                  style={{ animationDelay: `${idx * 0.15}s` }}
                 >
                   <div className="relative z-10 text-center">
                     <div className="mb-4 flex justify-center">
@@ -427,7 +424,7 @@ const Index = () => {
           </div>
 
           <div className="mt-12 max-w-2xl mx-auto">
-            <Card className="p-6 bg-gradient-to-br from-red-500 to-pink-600 border-0">
+            <Card className="p-6 bg-gradient-to-br from-red-500 to-pink-600 border-0 hover:scale-105 hover:shadow-2xl transition-all duration-300 animate-fade-in">
               <div className="text-center text-white">
                 <div className="flex items-center justify-center gap-2 mb-4">
                   <Icon name="Gem" size={32} className="text-white" />
@@ -501,7 +498,7 @@ const Index = () => {
           <h2 className="text-4xl font-bold text-center mb-12">Правила сервера AsuxGrief</h2>
           <div className="grid md:grid-cols-3 gap-3">
             {rules.map((rule, idx) => (
-              <Card key={idx} className="p-4 bg-card border-border hover:border-primary/50 transition-colors">
+              <Card key={idx} className="p-4 bg-card border-border hover:border-primary/50 hover:scale-105 transition-all duration-300 animate-fade-in" style={{ animationDelay: `${idx * 0.02}s` }}>
                 <div className="flex flex-col gap-2">
                   <div className="w-full h-10 bg-primary/20 rounded-lg flex items-center justify-center">
                     <span className="text-primary font-bold text-sm">{rule.section}</span>
@@ -519,47 +516,6 @@ const Index = () => {
               ⚠️ Выдавать мут и бан строго по правилам проекта по пунктам (например: 1.2). Выдача наказания не по пункту — варн!
             </p>
           </Card>
-        </div>
-      </section>
-
-      <section id="youtubers" className="py-20 px-4">
-        <div className="container mx-auto max-w-6xl">
-          <div className="text-center mb-12">
-            <h2 className="text-4xl font-bold mb-4">Официальные ютуберы проекта</h2>
-            <p className="text-muted-foreground">Следите за контентом наших партнёров</p>
-          </div>
-          <div className="grid md:grid-cols-2 gap-6 max-w-4xl mx-auto">
-            {youtubers.map((youtuber) => (
-              <Card 
-                key={youtuber.id}
-                className="p-6 bg-gradient-to-br from-red-600/20 to-red-800/20 border-red-500/30 hover:scale-105 transition-transform"
-              >
-                <a 
-                  href={youtuber.channelUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="block"
-                >
-                  <div className="flex items-center gap-4 mb-4">
-                    <div className="w-16 h-16 bg-gradient-to-br from-red-600 to-red-800 rounded-full flex items-center justify-center">
-                      <Icon name="Youtube" size={32} className="text-white" />
-                    </div>
-                    <div>
-                      <h3 className="text-xl font-bold">{youtuber.name}</h3>
-                      <div className="flex items-center gap-2 text-muted-foreground">
-                        <Icon name="Users" size={16} />
-                        <span className="text-sm">{youtuber.subscribers} подписчиков</span>
-                      </div>
-                    </div>
-                  </div>
-                  <Button className="w-full bg-gradient-to-r from-red-600 to-red-800 hover:opacity-90">
-                    <Icon name="Play" size={16} className="mr-2" />
-                    Смотреть канал
-                  </Button>
-                </a>
-              </Card>
-            ))}
-          </div>
         </div>
       </section>
 
@@ -809,83 +765,7 @@ const Index = () => {
             )}
           </Card>
 
-          <Card className="p-6 bg-card border-primary/50 shadow-2xl max-w-md max-h-[70vh] overflow-y-auto">
-            <div className="flex items-center justify-between mb-4">
-              <div className="flex items-center gap-2">
-                <Icon name="Youtube" size={24} className="text-primary" />
-                <h3 className="text-xl font-bold">Управление ютуберами</h3>
-              </div>
-              <Button
-                variant="ghost"
-                size="icon"
-                onClick={() => setShowYoutubersPanel(!showYoutubersPanel)}
-              >
-                <Icon name={showYoutubersPanel ? "ChevronDown" : "ChevronUp"} size={20} />
-              </Button>
-            </div>
-            {showYoutubersPanel && (
-              <div className="space-y-4">
-                <p className="text-sm text-muted-foreground">
-                  Управление списком официальных ютуберов проекта
-                </p>
-                <div className="space-y-3">
-                  {youtubers.map((youtuber) => (
-                    <div key={youtuber.id} className="bg-muted p-3 rounded-lg">
-                      <div className="flex items-center justify-between mb-2">
-                        <div>
-                          <p className="font-bold">{youtuber.name}</p>
-                          <p className="text-xs text-muted-foreground">{youtuber.subscribers} подписчиков</p>
-                        </div>
-                        <Button
-                          variant="ghost"
-                          size="icon"
-                          onClick={() => setYoutubers(youtubers.filter(y => y.id !== youtuber.id))}
-                        >
-                          <Icon name="Trash2" size={16} />
-                        </Button>
-                      </div>
-                      <p className="text-xs text-muted-foreground truncate">{youtuber.channelUrl}</p>
-                    </div>
-                  ))}
-                </div>
-                <div className="space-y-2 pt-4 border-t">
-                  <input
-                    type="text"
-                    placeholder="Имя ютубера"
-                    value={newYoutuber.name}
-                    onChange={(e) => setNewYoutuber({...newYoutuber, name: e.target.value})}
-                    className="w-full bg-muted border border-border rounded-lg px-3 py-2 text-sm"
-                  />
-                  <input
-                    type="text"
-                    placeholder="Кол-во подписчиков (например: 50K)"
-                    value={newYoutuber.subscribers}
-                    onChange={(e) => setNewYoutuber({...newYoutuber, subscribers: e.target.value})}
-                    className="w-full bg-muted border border-border rounded-lg px-3 py-2 text-sm"
-                  />
-                  <input
-                    type="text"
-                    placeholder="Ссылка на канал"
-                    value={newYoutuber.channelUrl}
-                    onChange={(e) => setNewYoutuber({...newYoutuber, channelUrl: e.target.value})}
-                    className="w-full bg-muted border border-border rounded-lg px-3 py-2 text-sm"
-                  />
-                  <Button 
-                    onClick={() => {
-                      if (newYoutuber.name && newYoutuber.subscribers && newYoutuber.channelUrl) {
-                        setYoutubers([...youtubers, { id: Date.now(), ...newYoutuber }]);
-                        setNewYoutuber({ name: "", subscribers: "", channelUrl: "" });
-                      }
-                    }}
-                    className="w-full" 
-                    size="sm"
-                  >
-                    Добавить ютубера
-                  </Button>
-                </div>
-              </div>
-            )}
-          </Card>
+
         </div>
       )}
 
