@@ -2,7 +2,7 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import Icon from "@/components/ui/icon";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 const Index = () => {
   const [rubiesAmount, setRubiesAmount] = useState(1);
@@ -30,6 +30,21 @@ const Index = () => {
   const [donates, setDonates] = useState([]);
   const [editingDonate, setEditingDonate] = useState<any>(null);
   const [showSBPPayment, setShowSBPPayment] = useState(false);
+  const [nickname, setNickname] = useState("");
+  const [isDarkMode, setIsDarkMode] = useState(() => {
+    const saved = localStorage.getItem('theme');
+    return saved === 'dark' || (!saved && window.matchMedia('(prefers-color-scheme: dark)').matches);
+  });
+
+  useEffect(() => {
+    if (isDarkMode) {
+      document.documentElement.classList.add('dark');
+      localStorage.setItem('theme', 'dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+      localStorage.setItem('theme', 'light');
+    }
+  }, [isDarkMode]);
 
   const revenue = {
     week: 12450,
@@ -219,10 +234,19 @@ const Index = () => {
                 asuxgrief
               </h1>
             </div>
-            <div className="hidden md:flex gap-6 items-center">
+            <div className="flex-1 flex justify-center gap-6">
               <a href="#about" className="hover:text-primary transition-all duration-300 hover:scale-110">О сервере</a>
               <a href="#donate" className="hover:text-primary transition-all duration-300 hover:scale-110">Донаты</a>
               <a href="#rules" className="hover:text-primary transition-all duration-300 hover:scale-110">Правила</a>
+            </div>
+            <div className="flex gap-3 items-center">
+              <button
+                onClick={() => setIsDarkMode(!isDarkMode)}
+                className="text-muted-foreground hover:text-primary transition-colors"
+                title={isDarkMode ? "Светлая тема" : "Тёмная тема"}
+              >
+                <Icon name={isDarkMode ? "Sun" : "Moon"} size={20} />
+              </button>
               <button
                 onClick={() => setShowCart(true)}
                 className="text-muted-foreground hover:text-primary transition-colors relative"
@@ -240,7 +264,6 @@ const Index = () => {
               >
                 <Icon name="Lock" size={20} />
               </button>
-            </div>
           </div>
         </div>
       </nav>
@@ -867,6 +890,16 @@ const Index = () => {
                 </div>
 
                 <div className="space-y-4 pt-4 border-t">
+                  <div>
+                    <label className="text-sm text-muted-foreground mb-2 block">Ваш никнейм на сервере</label>
+                    <input
+                      type="text"
+                      placeholder="Введите свой никнейм"
+                      value={nickname}
+                      onChange={(e) => setNickname(e.target.value)}
+                      className="w-full bg-muted border border-border rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-primary"
+                    />
+                  </div>
                   <div className="flex gap-2">
                     <input
                       type="text"
