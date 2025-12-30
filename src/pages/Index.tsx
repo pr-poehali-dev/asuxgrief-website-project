@@ -2,7 +2,7 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import Icon from "@/components/ui/icon";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 
 const Index = () => {
   const [rubiesAmount, setRubiesAmount] = useState(1);
@@ -33,20 +33,6 @@ const Index = () => {
   const [nickname, setNickname] = useState("");
   const [showGeneralRules, setShowGeneralRules] = useState(false);
   const [showChatRules, setShowChatRules] = useState(false);
-  const [isDarkMode, setIsDarkMode] = useState(() => {
-    const saved = localStorage.getItem('theme');
-    return saved === 'dark' || (!saved && window.matchMedia('(prefers-color-scheme: dark)').matches);
-  });
-
-  useEffect(() => {
-    if (isDarkMode) {
-      document.documentElement.classList.add('dark');
-      localStorage.setItem('theme', 'dark');
-    } else {
-      document.documentElement.classList.remove('dark');
-      localStorage.setItem('theme', 'light');
-    }
-  }, [isDarkMode]);
 
   const revenue = {
     week: 12450,
@@ -243,13 +229,6 @@ const Index = () => {
             </div>
             <div className="flex-1"></div>
             <div className="flex gap-3 items-center">
-              <button
-                onClick={() => setIsDarkMode(!isDarkMode)}
-                className="text-muted-foreground hover:text-primary transition-colors"
-                title={isDarkMode ? "Светлая тема" : "Тёмная тема"}
-              >
-                <Icon name={isDarkMode ? "Sun" : "Moon"} size={20} />
-              </button>
               <button
                 onClick={() => setShowCart(true)}
                 className="text-muted-foreground hover:text-primary transition-colors relative"
@@ -947,7 +926,17 @@ const Index = () => {
                         <span className="font-semibold">Оплатить через FunPay</span>
                       </a>
                       <Button
-                        onClick={() => setShowSBPPayment(true)}
+                        onClick={() => {
+                          if (!nickname || nickname.trim() === '') {
+                            alert('Пожалуйста, укажите свой никнейм без пробелов и тире');
+                            return;
+                          }
+                          if (nickname.includes(' ') || nickname.includes('-')) {
+                            alert('Никнейм не должен содержать пробелы и тире');
+                            return;
+                          }
+                          setShowSBPPayment(true);
+                        }}
                         className="w-full bg-gradient-to-r from-green-600 to-emerald-600 hover:opacity-90 text-white px-6 py-3"
                       >
                         <Icon name="QrCode" size={20} />
