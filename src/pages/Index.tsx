@@ -31,6 +31,8 @@ const Index = () => {
   const [editingDonate, setEditingDonate] = useState<any>(null);
   const [showSBPPayment, setShowSBPPayment] = useState(false);
   const [nickname, setNickname] = useState("");
+  const [showGeneralRules, setShowGeneralRules] = useState(false);
+  const [showChatRules, setShowChatRules] = useState(false);
   const [isDarkMode, setIsDarkMode] = useState(() => {
     const saved = localStorage.getItem('theme');
     return saved === 'dark' || (!saved && window.matchMedia('(prefers-color-scheme: dark)').matches);
@@ -102,16 +104,8 @@ const Index = () => {
     setCoupons(coupons.filter(c => c.id !== id));
   };
 
-  const rules = [
+  const generalRules = [
     { section: "1.0", title: "Общая информация", description: "Настоящий свод правил создан проектом AsuxGrief и применяются в рамках сервера AsuxGrief" },
-    
-    { section: "1.1", title: "Спам (флуд)", description: "Мут на 30 мин" },
-    { section: "1.1.2", title: "Пиар проектов", description: "Бан навсегда" },
-    { section: "1.2", title: "Массивное оскорбление", description: "Мут на 1 час" },
-    { section: "1.3", title: "Организация флуда через опрос", description: "Мут на 4 часа" },
-    { section: "1.4", title: "Упоминание родителей", description: "Мут на 7 дней" },
-    { section: "1.4.1", title: "Оскорбление проекта и модераторов", description: "Мут на 12 часов" },
-    
     { section: "1.5", title: "Использование читов", description: "Бан на 14 дней" },
     { section: "1.5.1", title: "Тим с читером", description: "Бан на 8 дней" },
     { section: "1.5.2", title: "Клан читеров", description: "Бан на 14 дней каждого" },
@@ -123,11 +117,19 @@ const Index = () => {
     { section: "2.0", title: "Задержка модератора", description: "Бан на 16 дней" },
     { section: "2.1", title: "Выдавать себя за модерацию", description: "Бан на 20 дней" },
     { section: "2.5", title: "Более 5 аккаунтов в бане", description: "Бан на 14 дней каждый новый" },
-    
     { section: "2.2", title: "Некорректный TP", description: "Варн" },
     { section: "2.3", title: "Взятка", description: "Снятие" },
     { section: "2.4", title: "Выдача админских предметов", description: "Варн" },
     { section: "2.5", title: "Некорректный мут", description: "Варн" },
+  ];
+
+  const chatRules = [
+    { section: "1.1", title: "Спам (флуд)", description: "Мут на 30 мин" },
+    { section: "1.1.2", title: "Пиар проектов", description: "Бан навсегда" },
+    { section: "1.2", title: "Массивное оскорбление", description: "Мут на 1 час" },
+    { section: "1.3", title: "Организация флуда через опрос", description: "Мут на 4 часа" },
+    { section: "1.4", title: "Упоминание родителей", description: "Мут на 7 дней" },
+    { section: "1.4.1", title: "Оскорбление проекта и модераторов", description: "Мут на 12 часов" },
   ];
 
   const donatePackages = [
@@ -562,22 +564,36 @@ const Index = () => {
       <section id="rules" className="py-20 px-4 bg-gradient-to-b from-transparent via-primary/5 to-transparent">
         <div className="container mx-auto max-w-7xl">
           <h2 className="text-4xl font-bold text-center mb-12">Правила сервера AsuxGrief</h2>
-          <div className="grid md:grid-cols-3 gap-3">
-            {rules.map((rule, idx) => (
-              <Card key={idx} className="p-4 bg-card border-border hover:border-primary/50 hover:scale-105 transition-all duration-300 animate-fade-in" style={{ animationDelay: `${idx * 0.02}s` }}>
-                <div className="flex flex-col gap-2">
-                  <div className="w-full h-10 bg-primary/20 rounded-lg flex items-center justify-center">
-                    <span className="text-primary font-bold text-sm">{rule.section}</span>
-                  </div>
-                  <div>
-                    <h3 className="text-base font-semibold mb-1">{rule.title}</h3>
-                    <p className="text-muted-foreground text-xs">{rule.description}</p>
-                  </div>
+          
+          <div className="grid md:grid-cols-2 gap-6 mb-8">
+            <Card 
+              className="p-6 bg-card border-2 border-primary/30 hover:border-primary hover:shadow-xl transition-all duration-300 cursor-pointer"
+              onClick={() => setShowGeneralRules(true)}
+            >
+              <div className="flex items-center justify-between">
+                <div>
+                  <h3 className="text-2xl font-bold mb-2">Общие правила</h3>
+                  <p className="text-muted-foreground">Основные правила игры на сервере</p>
                 </div>
-              </Card>
-            ))}
+                <Icon name="ChevronRight" size={32} className="text-primary" />
+              </div>
+            </Card>
+
+            <Card 
+              className="p-6 bg-card border-2 border-secondary/30 hover:border-secondary hover:shadow-xl transition-all duration-300 cursor-pointer"
+              onClick={() => setShowChatRules(true)}
+            >
+              <div className="flex items-center justify-between">
+                <div>
+                  <h3 className="text-2xl font-bold mb-2">Правила чата</h3>
+                  <p className="text-muted-foreground">Правила общения в игровом чате</p>
+                </div>
+                <Icon name="ChevronRight" size={32} className="text-secondary" />
+              </div>
+            </Card>
           </div>
-          <Card className="mt-8 p-6 bg-primary/10 border-primary/30">
+
+          <Card className="p-6 bg-primary/10 border-primary/30">
             <p className="text-center text-sm text-muted-foreground">
               ⚠️ Выдавать мут и бан строго по правилам проекта по пунктам (например: 1.2). Выдача наказания не по пункту — варн!
             </p>
@@ -961,12 +977,14 @@ const Index = () => {
             </div>
             
             <div className="space-y-6">
-              <div className="bg-white p-6 rounded-lg">
-                <img 
-                  src="https://cdn.poehali.dev/files/photo_2025-12-30_16-25-58.jpg"
-                  alt="QR-код для оплаты через СБП"
-                  className="w-full rounded-lg"
-                />
+              <div className="bg-gradient-to-br from-primary/10 via-secondary/10 to-primary/10 p-1 rounded-xl shadow-lg">
+                <div className="bg-white p-6 rounded-lg shadow-inner">
+                  <img 
+                    src="https://cdn.poehali.dev/files/c2cSberTQR.png"
+                    alt="QR-код для оплаты через СБП"
+                    className="w-full rounded-lg"
+                  />
+                </div>
               </div>
               
               <div className="space-y-4">
@@ -1046,6 +1064,70 @@ const Index = () => {
           </p>
         </div>
       </footer>
+
+      {showGeneralRules && (
+        <div className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+          <Card className="max-w-4xl w-full max-h-[90vh] overflow-y-auto p-6 bg-card">
+            <div className="flex items-center justify-between mb-6">
+              <h3 className="text-3xl font-bold">Общие правила сервера</h3>
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={() => setShowGeneralRules(false)}
+              >
+                <Icon name="X" size={20} />
+              </Button>
+            </div>
+            <div className="grid md:grid-cols-2 gap-3">
+              {generalRules.map((rule, idx) => (
+                <Card key={idx} className="p-4 bg-muted border-border">
+                  <div className="flex flex-col gap-2">
+                    <div className="w-full h-10 bg-primary/20 rounded-lg flex items-center justify-center">
+                      <span className="text-primary font-bold text-sm">{rule.section}</span>
+                    </div>
+                    <div>
+                      <h3 className="text-base font-semibold mb-1">{rule.title}</h3>
+                      <p className="text-muted-foreground text-xs">{rule.description}</p>
+                    </div>
+                  </div>
+                </Card>
+              ))}
+            </div>
+          </Card>
+        </div>
+      )}
+
+      {showChatRules && (
+        <div className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+          <Card className="max-w-4xl w-full max-h-[90vh] overflow-y-auto p-6 bg-card">
+            <div className="flex items-center justify-between mb-6">
+              <h3 className="text-3xl font-bold">Правила чата</h3>
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={() => setShowChatRules(false)}
+              >
+                <Icon name="X" size={20} />
+              </Button>
+            </div>
+            <div className="grid md:grid-cols-2 gap-3">
+              {chatRules.map((rule, idx) => (
+                <Card key={idx} className="p-4 bg-muted border-border">
+                  <div className="flex flex-col gap-2">
+                    <div className="w-full h-10 bg-secondary/20 rounded-lg flex items-center justify-center">
+                      <span className="text-secondary font-bold text-sm">{rule.section}</span>
+                    </div>
+                    <div>
+                      <h3 className="text-base font-semibold mb-1">{rule.title}</h3>
+                      <p className="text-muted-foreground text-xs">{rule.description}</p>
+                    </div>
+                  </div>
+                </Card>
+              ))}
+            </div>
+          </Card>
+        </div>
+      )}
     </div>
   );
 };
