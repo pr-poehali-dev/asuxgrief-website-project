@@ -234,11 +234,12 @@ const Index = () => {
                 asuxgrief
               </h1>
             </div>
-            <div className="flex-1 flex justify-center gap-6">
+            <div className="flex gap-6 ml-8">
               <a href="#about" className="hover:text-primary transition-all duration-300 hover:scale-110">О сервере</a>
               <a href="#donate" className="hover:text-primary transition-all duration-300 hover:scale-110">Донаты</a>
               <a href="#rules" className="hover:text-primary transition-all duration-300 hover:scale-110">Правила</a>
             </div>
+            <div className="flex-1"></div>
             <div className="flex gap-3 items-center">
               <button
                 onClick={() => setIsDarkMode(!isDarkMode)}
@@ -469,13 +470,6 @@ const Index = () => {
                     </Badge>
                   )}
                   <div className="relative z-10 text-center">
-                    <div className="mb-4 flex justify-center">
-                      <img 
-                        src="https://cdn.poehali.dev/projects/98412efd-c0e5-43db-be0c-3b985056cb51/files/beb736df-3613-41cf-94bf-98a68bc62e10.jpg"
-                        alt="Кейс"
-                        className="w-24 h-24 object-contain"
-                      />
-                    </div>
                     <h3 className="text-xl font-bold mb-2 text-white">{caseItem.name}</h3>
                     <div className="mb-4">
                       {caseItem.oldPrice && (
