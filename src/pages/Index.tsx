@@ -489,18 +489,18 @@ const Index = () => {
       </section>
 
       <section id="rules" className="py-20 px-4 bg-gradient-to-b from-transparent via-primary/5 to-transparent">
-        <div className="container mx-auto max-w-5xl">
+        <div className="container mx-auto max-w-7xl">
           <h2 className="text-4xl font-bold text-center mb-12">Правила сервера AsuxGrief</h2>
-          <div className="space-y-3">
+          <div className="grid md:grid-cols-3 gap-3">
             {rules.map((rule, idx) => (
               <Card key={idx} className="p-4 bg-card border-border hover:border-primary/50 transition-colors">
-                <div className="flex items-start gap-3">
-                  <div className="min-w-[60px] h-10 bg-primary/20 rounded-lg flex items-center justify-center flex-shrink-0">
+                <div className="flex flex-col gap-2">
+                  <div className="w-full h-10 bg-primary/20 rounded-lg flex items-center justify-center">
                     <span className="text-primary font-bold text-sm">{rule.section}</span>
                   </div>
-                  <div className="flex-1">
-                    <h3 className="text-lg font-semibold mb-1">{rule.title}</h3>
-                    <p className="text-muted-foreground text-sm">{rule.description}</p>
+                  <div>
+                    <h3 className="text-base font-semibold mb-1">{rule.title}</h3>
+                    <p className="text-muted-foreground text-xs">{rule.description}</p>
                   </div>
                 </div>
               </Card>
@@ -838,16 +838,27 @@ const Index = () => {
                     <span className="text-primary">{getTotalPrice()}₽</span>
                   </div>
                   <div className="bg-muted p-4 rounded-lg">
-                    <p className="text-sm font-semibold mb-2">Метод оплаты:</p>
-                    <a 
-                      href={funpayLink}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="flex items-center justify-center gap-2 bg-gradient-to-r from-orange-500 to-red-600 hover:opacity-90 text-white px-6 py-3 rounded-lg transition-opacity w-full"
-                    >
-                      <Icon name="CreditCard" size={20} />
-                      <span className="font-semibold">Оплатить через FunPay</span>
-                    </a>
+                    <p className="text-sm font-semibold mb-3">Методы оплаты:</p>
+                    <div className="space-y-3">
+                      <a 
+                        href={funpayLink}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex items-center justify-center gap-2 bg-gradient-to-r from-orange-500 to-red-600 hover:opacity-90 text-white px-6 py-3 rounded-lg transition-opacity w-full"
+                      >
+                        <Icon name="CreditCard" size={20} />
+                        <span className="font-semibold">Оплатить через FunPay</span>
+                      </a>
+                      <div className="bg-white p-4 rounded-lg">
+                        <p className="text-sm font-semibold text-center mb-3 text-black">Оплата через СБП</p>
+                        <img 
+                          src="https://cdn.poehali.dev/files/photo_2025-12-30_16-25-58.jpg"
+                          alt="QR-код для оплаты через СБП"
+                          className="w-full max-w-xs mx-auto rounded-lg"
+                        />
+                        <p className="text-xs text-center mt-2 text-muted-foreground">Отсканируйте QR-код в приложении банка</p>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </>
