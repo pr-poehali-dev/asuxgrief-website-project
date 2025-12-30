@@ -118,59 +118,77 @@ const Index = () => {
   const donatePackages = [
     { 
       name: "Pravitel", 
-      price: "49₽", 
+      price: "49₽",
+      oldPrice: "65₽",
       features: ["🎭 Надеть блок на голову: /hat", "👥 Игроки рядом: /near"],
-      color: "from-emerald-400 to-teal-500"
+      color: "from-emerald-400 to-teal-500",
+      discount: 25
     },
     { 
       name: "Orion", 
-      price: "299₽", 
+      price: "299₽",
+      oldPrice: "399₽",
       features: ["🛡️ Дон-панель: /orion", "🎁 Подарить донат: /grant", "📊 Статистика аккаунтов: /dupeip"],
-      color: "from-blue-500 to-indigo-600"
+      color: "from-blue-500 to-indigo-600",
+      discount: 25
     },
     { 
       name: "Xozyain", 
-      price: "219₽", 
+      price: "219₽",
+      oldPrice: "292₽",
       features: ["⚡ Ударить молнией: /thor", "🌧️ Штормовая погода: /rain", "❤️ Исцелить себя: /heal", "📍 Установить варп: /setwarp", "🚫 Список банов: /banlist"],
-      color: "from-green-500 to-emerald-600"
+      color: "from-green-500 to-emerald-600",
+      discount: 25
     },
     { 
       name: "Morok", 
-      price: "500₽", 
+      price: "500₽",
+      oldPrice: "667₽",
       features: ["🛡️ Дон-панель: /morok", "⬆️ Телепорт наверх: /top", "📋 Инфо по мутам/банам: /checkmute /checkban", "💰 Игровая зарплата: /salary"],
       special: true,
-      color: "from-red-600 to-red-800"
+      color: "from-red-600 to-red-800",
+      discount: 25
     },
     { 
       name: "Custom", 
-      price: "799₽", 
+      price: "799₽",
+      oldPrice: "1065₽",
       features: ["🎨 Индивидуальный донат по вашему запросу", "📧 Киньте админу фото с покупкой", "⏱️ Получите привилегию за 2 дня", "👑 Права как у Morok"],
-      color: "from-purple-500 to-pink-600"
+      color: "from-purple-500 to-pink-600",
+      discount: 25
     },
   ];
 
   const exclusiveDonate = {
     name: "Christmas",
     price: "399₽",
+    oldPrice: "532₽",
     features: ["🎄 ЛИМИТИРОВАННЫЙ СТАТУС", "🎁 Все права как у Morok", "🎀 Эксклюзивный набор", "⭐ Эксклюзивный префикс", "💵 Личная зарплата"],
-    color: "from-red-600 to-green-600"
+    color: "from-red-600 to-green-600",
+    discount: 25
   };
 
   const casePackages = [
     {
       name: "Донатный кейс",
       price: "79₽",
-      color: "from-amber-500 to-orange-600"
+      oldPrice: "105₽",
+      color: "from-amber-500 to-orange-600",
+      discount: 25
     },
     {
       name: "Монетный кейс",
       price: "15₽",
-      color: "from-yellow-400 to-amber-500"
+      oldPrice: "20₽",
+      color: "from-yellow-400 to-amber-500",
+      discount: 25
     },
     {
       name: "Кейс с рубинами",
       price: "20₽",
-      color: "from-rose-500 to-red-600"
+      oldPrice: "27₽",
+      color: "from-rose-500 to-red-600",
+      discount: 25
     },
   ];
 
@@ -323,24 +341,34 @@ const Index = () => {
                 className={`p-5 bg-gradient-to-br ${pkg.color} border-0 relative overflow-hidden hover:scale-105 hover:shadow-2xl transition-all duration-300 animate-fade-in`}
                 style={{ animationDelay: `${idx * 0.1}s` }}
               >
-                {pkg.popular && (
+                {pkg.discount && (
+                  <Badge className="absolute top-3 right-3 bg-red-600 text-white border-0 text-xs font-bold animate-pulse shadow-lg">
+                    🎄 -{pkg.discount}% НОВЫЙ ГОД
+                  </Badge>
+                )}
+                {pkg.popular && !pkg.discount && (
                   <Badge className="absolute top-3 right-3 bg-yellow-500 text-black border-0 text-xs">
                     🔥 Популярное
                   </Badge>
                 )}
-                {pkg.limited && (
+                {pkg.limited && !pkg.discount && (
                   <Badge className="absolute top-3 right-3 bg-amber-500 text-white border-0 text-xs animate-pulse">
                     ⏰ Лимитед
                   </Badge>
                 )}
-                {pkg.special && (
+                {pkg.special && !pkg.discount && (
                   <Badge className="absolute top-3 right-3 bg-cyan-400 text-black border-0 text-xs">
                     ⭐ Спецпредложение
                   </Badge>
                 )}
                 <div className="relative z-10">
                   <h3 className="text-xl font-bold mb-2 text-white">{pkg.name}</h3>
-                  <p className="text-3xl font-bold mb-4 text-white">{pkg.price}</p>
+                  <div className="mb-4">
+                    {pkg.oldPrice && (
+                      <p className="text-lg text-white/60 line-through">{pkg.oldPrice}</p>
+                    )}
+                    <p className="text-3xl font-bold text-white">{pkg.price}</p>
+                  </div>
                   <ul className="space-y-2 mb-4 min-h-[120px]">
                     {pkg.features.map((feature, fIdx) => (
                       <li key={fIdx} className="flex items-start gap-2 text-white/90 text-sm">
@@ -367,12 +395,22 @@ const Index = () => {
               <Card 
                 className={`p-8 bg-gradient-to-br ${exclusiveDonate.color} border-0 relative overflow-hidden hover:scale-105 hover:shadow-2xl transition-all duration-300 animate-fade-in`}
               >
-                <Badge className="absolute top-4 right-4 bg-amber-500 text-white border-0 animate-pulse">
-                  ⏰ ЛИМИТИРОВАННЫЙ
-                </Badge>
+                <div className="absolute top-4 right-4 flex flex-col gap-2 items-end">
+                  <Badge className="bg-red-600 text-white border-0 font-bold animate-pulse shadow-lg">
+                    🎄 -25% НОВЫЙ ГОД
+                  </Badge>
+                  <Badge className="bg-amber-500 text-white border-0 animate-pulse">
+                    ⏰ ЛИМИТИРОВАННЫЙ
+                  </Badge>
+                </div>
                 <div className="relative z-10 text-center">
                   <h3 className="text-3xl font-bold mb-3 text-white">{exclusiveDonate.name}</h3>
-                  <p className="text-5xl font-bold mb-6 text-white">{exclusiveDonate.price}</p>
+                  <div className="mb-6">
+                    {exclusiveDonate.oldPrice && (
+                      <p className="text-2xl text-white/60 line-through mb-2">{exclusiveDonate.oldPrice}</p>
+                    )}
+                    <p className="text-5xl font-bold text-white">{exclusiveDonate.price}</p>
+                  </div>
                   <ul className="space-y-3 mb-6 text-left max-w-md mx-auto">
                     {exclusiveDonate.features.map((feature, fIdx) => (
                       <li key={fIdx} className="flex items-start gap-3 text-white text-base">
@@ -401,6 +439,11 @@ const Index = () => {
                   className={`p-6 bg-gradient-to-br ${caseItem.color} border-0 relative overflow-hidden hover:scale-105 hover:shadow-2xl transition-all duration-300 animate-fade-in`}
                   style={{ animationDelay: `${idx * 0.15}s` }}
                 >
+                  {caseItem.discount && (
+                    <Badge className="absolute top-3 right-3 bg-red-600 text-white border-0 text-xs font-bold animate-pulse shadow-lg">
+                      🎄 -{caseItem.discount}% НОВЫЙ ГОД
+                    </Badge>
+                  )}
                   <div className="relative z-10 text-center">
                     <div className="mb-4 flex justify-center">
                       <img 
@@ -410,7 +453,12 @@ const Index = () => {
                       />
                     </div>
                     <h3 className="text-xl font-bold mb-2 text-white">{caseItem.name}</h3>
-                    <p className="text-3xl font-bold mb-4 text-white">{caseItem.price}</p>
+                    <div className="mb-4">
+                      {caseItem.oldPrice && (
+                        <p className="text-base text-white/60 line-through">{caseItem.oldPrice}</p>
+                      )}
+                      <p className="text-3xl font-bold text-white">{caseItem.price}</p>
+                    </div>
                     <Button 
                       onClick={() => addToCart({ ...caseItem, type: 'case' })}
                       className="w-full bg-white text-black hover:bg-white/90 font-bold"
