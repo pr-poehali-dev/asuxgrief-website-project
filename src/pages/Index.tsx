@@ -11,10 +11,10 @@ const Index = () => {
   const [adminPassword, setAdminPassword] = useState("");
   const [cart, setCart] = useState<any[]>([]);
   const [showCart, setShowCart] = useState(false);
-  const [showCoupons, setShowCoupons] = useState(false);
+  const [showCoupons, setShowCoupons] = useState(true);
   const [rubiesPresets, setRubiesPresets] = useState([1, 5, 10, 50, 100, 150]);
   const [rubiesRate, setRubiesRate] = useState(100);
-  const [showRubiesPanel, setShowRubiesPanel] = useState(false);
+  const [showRubiesPanel, setShowRubiesPanel] = useState(true);
   const [newRubiesPreset, setNewRubiesPreset] = useState("");
   const [coupons, setCoupons] = useState([
     { id: 1, code: "NEWYEAR2024", discount: 20, items: ["Christmas", "Morok"], usedCount: 45 },
@@ -25,9 +25,9 @@ const Index = () => {
   const [newCoupon, setNewCoupon] = useState({ code: "", discount: 0, items: "" });
   const [appliedCoupon, setAppliedCoupon] = useState<any>(null);
   const [couponInput, setCouponInput] = useState("");
-  const [showServicesPanel, setShowServicesPanel] = useState(false);
-  const [showSettingsPanel, setShowSettingsPanel] = useState(false);
-  const [showDonatesPanel, setShowDonatesPanel] = useState(false);
+  const [showServicesPanel, setShowServicesPanel] = useState(true);
+  const [showSettingsPanel, setShowSettingsPanel] = useState(true);
+  const [showDonatesPanel, setShowDonatesPanel] = useState(true);
   const [telegramLink, setTelegramLink] = useState("https://t.me/asuxgrief");
   const [discordLink, setDiscordLink] = useState("https://discord.gg/4X3hd5a5mq");
   const [funpayLink, setFunpayLink] = useState("https://funpay.com/users/14617125/");
@@ -37,7 +37,10 @@ const Index = () => {
   const [nickname, setNickname] = useState("");
   const [showGeneralRules, setShowGeneralRules] = useState(false);
   const [showChatRules, setShowChatRules] = useState(false);
-  const [showCouponStats, setShowCouponStats] = useState(false);
+  const [showCouponStats, setShowCouponStats] = useState(true);
+  const [showExclusiveDonatesPanel, setShowExclusiveDonatesPanel] = useState(true);
+  const [showCasesPanel, setShowCasesPanel] = useState(true);
+  const [showRevenuePanel, setShowRevenuePanel] = useState(true);
   const [donatePackages, setDonatePackages] = useState([
     { 
       id: 1,
@@ -742,15 +745,25 @@ const Index = () => {
                 <Icon name="TrendingUp" size={24} className="text-primary" />
                 <h3 className="text-xl font-bold">Аналитика прибыли</h3>
               </div>
-              <Button
-                variant="ghost"
-                size="icon"
-                onClick={() => setIsAdmin(false)}
-              >
-                <Icon name="X" size={20} />
-              </Button>
+              <div className="flex gap-2">
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  onClick={() => setShowRevenuePanel(!showRevenuePanel)}
+                >
+                  <Icon name={showRevenuePanel ? "ChevronDown" : "ChevronUp"} size={20} />
+                </Button>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  onClick={() => setIsAdmin(false)}
+                >
+                  <Icon name="X" size={20} />
+                </Button>
+              </div>
             </div>
-            <div className="space-y-4">
+            {showRevenuePanel && (
+              <div className="space-y-4">
               <div className="grid grid-cols-2 gap-4">
                 <div className="bg-primary/10 rounded-lg p-4">
                   <p className="text-sm text-muted-foreground mb-1">За неделю</p>
@@ -770,6 +783,7 @@ const Index = () => {
                 </div>
               </div>
             </div>
+            )}
           </Card>
 
           <Card className="p-6 bg-card border-primary/50 shadow-2xl max-w-md">
@@ -1030,8 +1044,16 @@ const Index = () => {
                 <Icon name="Star" size={24} className="text-primary" />
                 <h3 className="text-xl font-bold">Эксклюзивные донаты</h3>
               </div>
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={() => setShowExclusiveDonatesPanel(!showExclusiveDonatesPanel)}
+              >
+                <Icon name={showExclusiveDonatesPanel ? "ChevronDown" : "ChevronUp"} size={20} />
+              </Button>
             </div>
-            <div className="space-y-4">
+            {showExclusiveDonatesPanel && (
+              <div className="space-y-4">
               <p className="text-sm text-muted-foreground">
                 Управление лимитированными и эксклюзивными донатами.
               </p>
@@ -1116,6 +1138,7 @@ const Index = () => {
                 </div>
               </div>
             </div>
+            )}
           </Card>
 
           <Card className="p-6 bg-card border-primary/50 shadow-2xl max-w-md max-h-[70vh] overflow-y-auto">
@@ -1124,8 +1147,16 @@ const Index = () => {
                 <Icon name="Box" size={24} className="text-primary" />
                 <h3 className="text-xl font-bold">Управление кейсами</h3>
               </div>
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={() => setShowCasesPanel(!showCasesPanel)}
+              >
+                <Icon name={showCasesPanel ? "ChevronDown" : "ChevronUp"} size={20} />
+              </Button>
             </div>
-            <div className="space-y-4">
+            {showCasesPanel && (
+              <div className="space-y-4">
               <p className="text-sm text-muted-foreground">
                 Редактируйте кейсы, добавляйте новые или удаляйте старые.
               </p>
@@ -1200,6 +1231,7 @@ const Index = () => {
                 </div>
               </div>
             </div>
+            )}
           </Card>
 
           <Card className="p-6 bg-card border-primary/50 shadow-2xl max-w-md max-h-[70vh] overflow-y-auto">
