@@ -531,8 +531,16 @@ const Index = () => {
                   </li>
                 </ul>
 
-                <Button className="w-full bg-white text-pink-600 hover:bg-white/90 font-bold">
-                  Купить за {rubiesAmount}₽
+                <Button 
+                  onClick={() => addToCart({ 
+                    name: `Рубины (${rubiesAmount * 100} шт)`, 
+                    price: `${rubiesAmount}₽`, 
+                    type: 'rubies',
+                    amount: rubiesAmount
+                  })}
+                  className="w-full bg-white text-pink-600 hover:bg-white/90 font-bold"
+                >
+                  Добавить в корзину
                 </Button>
               </div>
             </Card>
