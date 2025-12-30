@@ -997,6 +997,18 @@ const Index = () => {
                   </div>
                 </div>
                 
+                <div className="bg-amber-500/10 border border-amber-500/30 rounded-lg p-4 mt-4">
+                  <div className="flex items-start gap-3">
+                    <Icon name="AlertCircle" size={20} className="text-amber-500 flex-shrink-0 mt-0.5" />
+                    <div className="space-y-2">
+                      <p className="font-semibold text-amber-700 dark:text-amber-400">Важно!</p>
+                      <p className="text-sm text-amber-600 dark:text-amber-300">
+                        При переводе обязательно напишите в сообщении что купили и ваш никнейм: <span className="font-mono font-bold">{nickname || "[укажите ник]"}</span>
+                      </p>
+                    </div>
+                  </div>
+                </div>
+                
                 <div className="bg-amber-500/10 border border-amber-500/30 rounded-lg p-4">
                   <p className="text-xs text-amber-500">
                     ⚠️ После оплаты напишите администратору с подтверждением платежа для получения покупки
