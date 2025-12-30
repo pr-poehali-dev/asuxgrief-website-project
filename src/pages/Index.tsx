@@ -28,6 +28,12 @@ const Index = () => {
   const [donates, setDonates] = useState([]);
   const [editingDonate, setEditingDonate] = useState<any>(null);
   const [showSBPPayment, setShowSBPPayment] = useState(false);
+  const [showYoutubersPanel, setShowYoutubersPanel] = useState(false);
+  const [youtubers, setYoutubers] = useState([
+    { id: 1, name: "fastpekov", subscribers: "50K", channelUrl: "https://youtube.com/@fastpekov" },
+    { id: 2, name: "molcos", subscribers: "25K", channelUrl: "https://youtube.com/@molcos" },
+  ]);
+  const [newYoutuber, setNewYoutuber] = useState({ name: "", subscribers: "", channelUrl: "" });
 
   const revenue = {
     week: 12450,
@@ -203,6 +209,7 @@ const Index = () => {
               <a href="#about" className="hover:text-primary transition-colors">О сервере</a>
               <a href="#donate" className="hover:text-primary transition-colors">Донаты</a>
               <a href="#rules" className="hover:text-primary transition-colors">Правила</a>
+              <a href="#youtubers" className="hover:text-primary transition-colors">Ютуберы</a>
               <button
                 onClick={() => setShowCart(true)}
                 className="text-muted-foreground hover:text-primary transition-colors relative"
@@ -515,7 +522,46 @@ const Index = () => {
         </div>
       </section>
 
-
+      <section id="youtubers" className="py-20 px-4">
+        <div className="container mx-auto max-w-6xl">
+          <div className="text-center mb-12">
+            <h2 className="text-4xl font-bold mb-4">Официальные ютуберы проекта</h2>
+            <p className="text-muted-foreground">Следите за контентом наших партнёров</p>
+          </div>
+          <div className="grid md:grid-cols-2 gap-6 max-w-4xl mx-auto">
+            {youtubers.map((youtuber) => (
+              <Card 
+                key={youtuber.id}
+                className="p-6 bg-gradient-to-br from-red-600/20 to-red-800/20 border-red-500/30 hover:scale-105 transition-transform"
+              >
+                <a 
+                  href={youtuber.channelUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="block"
+                >
+                  <div className="flex items-center gap-4 mb-4">
+                    <div className="w-16 h-16 bg-gradient-to-br from-red-600 to-red-800 rounded-full flex items-center justify-center">
+                      <Icon name="Youtube" size={32} className="text-white" />
+                    </div>
+                    <div>
+                      <h3 className="text-xl font-bold">{youtuber.name}</h3>
+                      <div className="flex items-center gap-2 text-muted-foreground">
+                        <Icon name="Users" size={16} />
+                        <span className="text-sm">{youtuber.subscribers} подписчиков</span>
+                      </div>
+                    </div>
+                  </div>
+                  <Button className="w-full bg-gradient-to-r from-red-600 to-red-800 hover:opacity-90">
+                    <Icon name="Play" size={16} className="mr-2" />
+                    Смотреть канал
+                  </Button>
+                </a>
+              </Card>
+            ))}
+          </div>
+        </div>
+      </section>
 
       {showAdminPanel && !isAdmin && (
         <div className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
@@ -758,6 +804,84 @@ const Index = () => {
                       </Button>
                     </div>
                   </div>
+                </div>
+              </div>
+            )}
+          </Card>
+
+          <Card className="p-6 bg-card border-primary/50 shadow-2xl max-w-md max-h-[70vh] overflow-y-auto">
+            <div className="flex items-center justify-between mb-4">
+              <div className="flex items-center gap-2">
+                <Icon name="Youtube" size={24} className="text-primary" />
+                <h3 className="text-xl font-bold">Управление ютуберами</h3>
+              </div>
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={() => setShowYoutubersPanel(!showYoutubersPanel)}
+              >
+                <Icon name={showYoutubersPanel ? "ChevronDown" : "ChevronUp"} size={20} />
+              </Button>
+            </div>
+            {showYoutubersPanel && (
+              <div className="space-y-4">
+                <p className="text-sm text-muted-foreground">
+                  Управление списком официальных ютуберов проекта
+                </p>
+                <div className="space-y-3">
+                  {youtubers.map((youtuber) => (
+                    <div key={youtuber.id} className="bg-muted p-3 rounded-lg">
+                      <div className="flex items-center justify-between mb-2">
+                        <div>
+                          <p className="font-bold">{youtuber.name}</p>
+                          <p className="text-xs text-muted-foreground">{youtuber.subscribers} подписчиков</p>
+                        </div>
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          onClick={() => setYoutubers(youtubers.filter(y => y.id !== youtuber.id))}
+                        >
+                          <Icon name="Trash2" size={16} />
+                        </Button>
+                      </div>
+                      <p className="text-xs text-muted-foreground truncate">{youtuber.channelUrl}</p>
+                    </div>
+                  ))}
+                </div>
+                <div className="space-y-2 pt-4 border-t">
+                  <input
+                    type="text"
+                    placeholder="Имя ютубера"
+                    value={newYoutuber.name}
+                    onChange={(e) => setNewYoutuber({...newYoutuber, name: e.target.value})}
+                    className="w-full bg-muted border border-border rounded-lg px-3 py-2 text-sm"
+                  />
+                  <input
+                    type="text"
+                    placeholder="Кол-во подписчиков (например: 50K)"
+                    value={newYoutuber.subscribers}
+                    onChange={(e) => setNewYoutuber({...newYoutuber, subscribers: e.target.value})}
+                    className="w-full bg-muted border border-border rounded-lg px-3 py-2 text-sm"
+                  />
+                  <input
+                    type="text"
+                    placeholder="Ссылка на канал"
+                    value={newYoutuber.channelUrl}
+                    onChange={(e) => setNewYoutuber({...newYoutuber, channelUrl: e.target.value})}
+                    className="w-full bg-muted border border-border rounded-lg px-3 py-2 text-sm"
+                  />
+                  <Button 
+                    onClick={() => {
+                      if (newYoutuber.name && newYoutuber.subscribers && newYoutuber.channelUrl) {
+                        setYoutubers([...youtubers, { id: Date.now(), ...newYoutuber }]);
+                        setNewYoutuber({ name: "", subscribers: "", channelUrl: "" });
+                      }
+                    }}
+                    className="w-full" 
+                    size="sm"
+                  >
+                    Добавить ютубера
+                  </Button>
                 </div>
               </div>
             )}
