@@ -63,15 +63,15 @@ const Index = () => {
   };
 
   const getDiscountedPrice = (item: any) => {
-    if (!appliedCoupon) return parseInt(item.price);
+    if (!appliedCoupon) return Math.floor(parseInt(item.price));
     if (appliedCoupon.items.includes("all") || appliedCoupon.items.includes(item.name)) {
-      return parseInt(item.price) * (1 - appliedCoupon.discount / 100);
+      return Math.floor(parseInt(item.price) * (1 - appliedCoupon.discount / 100));
     }
-    return parseInt(item.price);
+    return Math.floor(parseInt(item.price));
   };
 
   const getTotalPrice = () => {
-    return cart.reduce((sum, item) => sum + getDiscountedPrice(item), 0);
+    return Math.floor(cart.reduce((sum, item) => sum + getDiscountedPrice(item), 0));
   };
 
   const addCoupon = () => {
