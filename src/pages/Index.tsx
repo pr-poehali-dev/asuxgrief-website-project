@@ -27,6 +27,7 @@ const Index = () => {
   const [funpayLink, setFunpayLink] = useState("https://funpay.com/users/14617125/");
   const [donates, setDonates] = useState([]);
   const [editingDonate, setEditingDonate] = useState<any>(null);
+  const [showSBPPayment, setShowSBPPayment] = useState(false);
 
   const revenue = {
     week: 12450,
@@ -849,20 +850,80 @@ const Index = () => {
                         <Icon name="CreditCard" size={20} />
                         <span className="font-semibold">Оплатить через FunPay</span>
                       </a>
-                      <div className="bg-white p-4 rounded-lg">
-                        <p className="text-sm font-semibold text-center mb-3 text-black">Оплата через СБП</p>
-                        <img 
-                          src="https://cdn.poehali.dev/files/photo_2025-12-30_16-25-58.jpg"
-                          alt="QR-код для оплаты через СБП"
-                          className="w-full max-w-xs mx-auto rounded-lg"
-                        />
-                        <p className="text-xs text-center mt-2 text-muted-foreground">Отсканируйте QR-код в приложении банка</p>
-                      </div>
+                      <Button
+                        onClick={() => setShowSBPPayment(true)}
+                        className="w-full bg-gradient-to-r from-green-600 to-emerald-600 hover:opacity-90 text-white px-6 py-3"
+                      >
+                        <Icon name="QrCode" size={20} />
+                        <span className="font-semibold">Оплатить через СБП</span>
+                      </Button>
                     </div>
                   </div>
                 </div>
               </>
             )}
+          </Card>
+        </div>
+      )}
+
+      {showSBPPayment && (
+        <div className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+          <Card className="max-w-md w-full p-8 bg-card">
+            <div className="flex items-center justify-between mb-6">
+              <h3 className="text-2xl font-bold">Оплата через СБП</h3>
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={() => setShowSBPPayment(false)}
+              >
+                <Icon name="X" size={20} />
+              </Button>
+            </div>
+            
+            <div className="space-y-6">
+              <div className="bg-white p-6 rounded-lg">
+                <img 
+                  src="https://cdn.poehali.dev/files/photo_2025-12-30_16-25-58.jpg"
+                  alt="QR-код для оплаты через СБП"
+                  className="w-full rounded-lg"
+                />
+              </div>
+              
+              <div className="space-y-4">
+                <div className="bg-primary/10 border border-primary/30 rounded-lg p-4">
+                  <div className="flex items-center justify-between mb-2">
+                    <span className="text-sm font-semibold">Сумма к оплате:</span>
+                    <span className="text-2xl font-bold text-primary">{getTotalPrice()}₽</span>
+                  </div>
+                  {appliedCoupon && (
+                    <p className="text-xs text-green-500">
+                      ✓ Применён купон {appliedCoupon.code} ({appliedCoupon.discount}% скидка)
+                    </p>
+                  )}
+                </div>
+                
+                <div className="space-y-2 text-sm text-muted-foreground">
+                  <div className="flex items-start gap-2">
+                    <Icon name="Smartphone" size={16} className="mt-0.5 flex-shrink-0" />
+                    <p>Откройте приложение банка на телефоне</p>
+                  </div>
+                  <div className="flex items-start gap-2">
+                    <Icon name="QrCode" size={16} className="mt-0.5 flex-shrink-0" />
+                    <p>Отсканируйте QR-код</p>
+                  </div>
+                  <div className="flex items-start gap-2">
+                    <Icon name="Check" size={16} className="mt-0.5 flex-shrink-0" />
+                    <p>Подтвердите платёж в приложении</p>
+                  </div>
+                </div>
+                
+                <div className="bg-amber-500/10 border border-amber-500/30 rounded-lg p-4">
+                  <p className="text-xs text-amber-500">
+                    ⚠️ После оплаты напишите администратору с подтверждением платежа для получения покупки
+                  </p>
+                </div>
+              </div>
+            </div>
           </Card>
         </div>
       )}
