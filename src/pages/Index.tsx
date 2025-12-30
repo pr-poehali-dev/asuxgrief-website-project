@@ -12,6 +12,10 @@ const Index = () => {
   const [cart, setCart] = useState<any[]>([]);
   const [showCart, setShowCart] = useState(false);
   const [showCoupons, setShowCoupons] = useState(false);
+  const [rubiesPresets, setRubiesPresets] = useState([1, 5, 10, 50, 100, 150]);
+  const [rubiesRate, setRubiesRate] = useState(100);
+  const [showRubiesPanel, setShowRubiesPanel] = useState(false);
+  const [newRubiesPreset, setNewRubiesPreset] = useState("");
   const [coupons, setCoupons] = useState([
     { id: 1, code: "NEWYEAR2024", discount: 20, items: ["Christmas", "Morok"], usedCount: 45 },
     { id: 2, code: "FIRSTBUY", discount: 15, items: ["all"], usedCount: 128 },
@@ -599,7 +603,7 @@ const Index = () => {
                     </Button>
                     <div className="text-center">
                       <p className="text-5xl font-bold text-white">{rubiesAmount}₽</p>
-                      <p className="text-white/80 mt-2">= {rubiesAmount * 100} рубинов</p>
+                      <p className="text-white/80 mt-2">= {rubiesAmount * rubiesRate} рубинов</p>
                     </div>
                     <Button 
                       onClick={() => setRubiesAmount(rubiesAmount + 1)}
@@ -611,7 +615,7 @@ const Index = () => {
                   </div>
                   
                   <div className="grid grid-cols-3 gap-2 mb-4">
-                    {[1, 5, 10, 50, 100, 150].map((amount) => (
+                    {rubiesPresets.map((amount) => (
                       <Button
                         key={amount}
                         onClick={() => setRubiesAmount(amount)}
@@ -642,7 +646,7 @@ const Index = () => {
 
                 <Button 
                   onClick={() => addToCart({ 
-                    name: `Рубины (${rubiesAmount * 100} шт)`, 
+                    name: `Рубины (${rubiesAmount * rubiesRate} шт)`, 
                     price: `${rubiesAmount}₽`, 
                     type: 'rubies',
                     amount: rubiesAmount
@@ -1196,6 +1200,86 @@ const Index = () => {
                 </div>
               </div>
             </div>
+          </Card>
+
+          <Card className="p-6 bg-card border-primary/50 shadow-2xl max-w-md max-h-[70vh] overflow-y-auto">
+            <div className="flex items-center justify-between mb-4">
+              <div className="flex items-center gap-2">
+                <Icon name="Gem" size={24} className="text-primary" />
+                <h3 className="text-xl font-bold">Управление рубинами</h3>
+              </div>
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={() => setShowRubiesPanel(!showRubiesPanel)}
+              >
+                <Icon name={showRubiesPanel ? "ChevronDown" : "ChevronUp"} size={20} />
+              </Button>
+            </div>
+            {showRubiesPanel && (
+              <div className="space-y-4">
+                <div>
+                  <label className="text-sm font-medium mb-2 block">Курс обмена (рубинов за 1₽)</label>
+                  <input
+                    type="number"
+                    value={rubiesRate}
+                    onChange={(e) => setRubiesRate(parseInt(e.target.value) || 100)}
+                    className="w-full bg-muted border border-border rounded-lg px-3 py-2"
+                  />
+                  <p className="text-xs text-muted-foreground mt-1">
+                    Сейчас: 1₽ = {rubiesRate} рубинов
+                  </p>
+                </div>
+                
+                <div>
+                  <label className="text-sm font-medium mb-2 block">Быстрые суммы</label>
+                  <div className="space-y-2">
+                    {rubiesPresets.map((preset, idx) => (
+                      <div key={idx} className="flex items-center gap-2">
+                        <input
+                          type="number"
+                          value={preset}
+                          onChange={(e) => {
+                            const newPresets = [...rubiesPresets];
+                            newPresets[idx] = parseInt(e.target.value) || 0;
+                            setRubiesPresets(newPresets);
+                          }}
+                          className="flex-1 bg-muted border border-border rounded-lg px-3 py-2 text-sm"
+                        />
+                        <Button
+                          variant="destructive"
+                          size="sm"
+                          onClick={() => setRubiesPresets(rubiesPresets.filter((_, i) => i !== idx))}
+                        >
+                          <Icon name="Trash2" size={14} />
+                        </Button>
+                      </div>
+                    ))}
+                    
+                    <div className="flex gap-2 pt-2 border-t">
+                      <input
+                        type="number"
+                        placeholder="Новая сумма"
+                        value={newRubiesPreset}
+                        onChange={(e) => setNewRubiesPreset(e.target.value)}
+                        className="flex-1 bg-muted border border-border rounded-lg px-3 py-2 text-sm"
+                      />
+                      <Button
+                        onClick={() => {
+                          if (newRubiesPreset && parseInt(newRubiesPreset) > 0) {
+                            setRubiesPresets([...rubiesPresets, parseInt(newRubiesPreset)]);
+                            setNewRubiesPreset("");
+                          }
+                        }}
+                        size="sm"
+                      >
+                        <Icon name="Plus" size={14} />
+                      </Button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
           </Card>
 
 
