@@ -13,10 +13,10 @@ const Index = () => {
   const [showCart, setShowCart] = useState(false);
   const [showCoupons, setShowCoupons] = useState(false);
   const [coupons, setCoupons] = useState([
-    { id: 1, code: "NEWYEAR2024", discount: 20, items: ["Christmas", "Morok"] },
-    { id: 2, code: "FIRSTBUY", discount: 15, items: ["all"] },
-    { id: 3, code: "FASTPEKOV", discount: 10, items: ["all"] },
-    { id: 4, code: "MOLCOS", discount: 10, items: ["all"] },
+    { id: 1, code: "NEWYEAR2024", discount: 20, items: ["Christmas", "Morok"], usedCount: 45 },
+    { id: 2, code: "FIRSTBUY", discount: 15, items: ["all"], usedCount: 128 },
+    { id: 3, code: "FASTPEKOV", discount: 10, items: ["all"], usedCount: 67 },
+    { id: 4, code: "MOLCOS", discount: 10, items: ["all"], usedCount: 89 },
   ]);
   const [newCoupon, setNewCoupon] = useState({ code: "", discount: 0, items: "" });
   const [appliedCoupon, setAppliedCoupon] = useState<any>(null);
@@ -33,6 +33,57 @@ const Index = () => {
   const [nickname, setNickname] = useState("");
   const [showGeneralRules, setShowGeneralRules] = useState(false);
   const [showChatRules, setShowChatRules] = useState(false);
+  const [showCouponStats, setShowCouponStats] = useState(false);
+  const [donatePackages, setDonatePackages] = useState([
+    { 
+      id: 1,
+      name: "Pravitel", 
+      price: "49₽",
+      oldPrice: "65₽",
+      features: ["🎭 Надеть блок на голову: /hat", "👥 Игроки рядом: /near"],
+      color: "from-emerald-400 to-teal-500",
+      discount: 25
+    },
+    { 
+      id: 2,
+      name: "Orion", 
+      price: "299₽",
+      oldPrice: "399₽",
+      features: ["🛡️ Дон-панель: /orion", "🎁 Подарить донат: /grant", "📊 Статистика аккаунтов: /dupeip"],
+      color: "from-blue-500 to-indigo-600",
+      discount: 25
+    },
+    { 
+      id: 3,
+      name: "Xozyain", 
+      price: "219₽",
+      oldPrice: "292₽",
+      features: ["⚡ Ударить молнией: /thor", "🌧️ Штормовая погода: /rain", "❤️ Исцелить себя: /heal", "📍 Установить варп: /setwarp", "🚫 Список банов: /banlist"],
+      color: "from-green-500 to-emerald-600",
+      discount: 25
+    },
+    { 
+      id: 4,
+      name: "Morok", 
+      price: "500₽",
+      oldPrice: "667₽",
+      features: ["🛡️ Дон-панель: /morok", "⬆️ Телепорт наверх: /top", "📋 Инфо по мутам/банам: /checkmute /checkban", "💰 Игровая зарплата: /salary"],
+      special: true,
+      color: "from-red-600 to-red-800",
+      discount: 25
+    },
+    { 
+      id: 5,
+      name: "Custom", 
+      price: "799₽",
+      oldPrice: "1065₽",
+      features: ["🎨 Индивидуальный донат по вашему запросу", "📧 Киньте админу фото с покупкой", "⏱️ Получите привилегию за 2 дня", "👑 Права как у Morok"],
+      color: "from-purple-500 to-pink-600",
+      discount: 25
+    },
+  ]);
+  const [editingDonatePackage, setEditingDonatePackage] = useState<any>(null);
+  const [newDonatePackage, setNewDonatePackage] = useState({ name: "", price: "", oldPrice: "", features: "", color: "" });
 
   const revenue = {
     week: 12450,
@@ -80,7 +131,8 @@ const Index = () => {
         id: Date.now(),
         code: newCoupon.code.toUpperCase(),
         discount: newCoupon.discount,
-        items: newCoupon.items.split(",").map(i => i.trim())
+        items: newCoupon.items.split(",").map(i => i.trim()),
+        usedCount: 0
       }]);
       setNewCoupon({ code: "", discount: 0, items: "" });
     }
@@ -88,6 +140,34 @@ const Index = () => {
 
   const deleteCoupon = (id: number) => {
     setCoupons(coupons.filter(c => c.id !== id));
+  };
+
+  const addDonatePackage = () => {
+    if (newDonatePackage.name && newDonatePackage.price) {
+      setDonatePackages([...donatePackages, {
+        id: Date.now(),
+        name: newDonatePackage.name,
+        price: newDonatePackage.price,
+        oldPrice: newDonatePackage.oldPrice,
+        features: newDonatePackage.features.split(",").map(f => f.trim()),
+        color: newDonatePackage.color || "from-gray-500 to-gray-600",
+        discount: 25
+      }]);
+      setNewDonatePackage({ name: "", price: "", oldPrice: "", features: "", color: "" });
+    }
+  };
+
+  const updateDonatePackage = () => {
+    if (editingDonatePackage) {
+      setDonatePackages(donatePackages.map(d => 
+        d.id === editingDonatePackage.id ? editingDonatePackage : d
+      ));
+      setEditingDonatePackage(null);
+    }
+  };
+
+  const deleteDonatePackage = (id: number) => {
+    setDonatePackages(donatePackages.filter(d => d.id !== id));
   };
 
   const generalRules = [
@@ -118,49 +198,7 @@ const Index = () => {
     { section: "1.4.1", title: "Оскорбление проекта и модераторов", description: "Мут на 12 часов" },
   ];
 
-  const donatePackages = [
-    { 
-      name: "Pravitel", 
-      price: "49₽",
-      oldPrice: "65₽",
-      features: ["🎭 Надеть блок на голову: /hat", "👥 Игроки рядом: /near"],
-      color: "from-emerald-400 to-teal-500",
-      discount: 25
-    },
-    { 
-      name: "Orion", 
-      price: "299₽",
-      oldPrice: "399₽",
-      features: ["🛡️ Дон-панель: /orion", "🎁 Подарить донат: /grant", "📊 Статистика аккаунтов: /dupeip"],
-      color: "from-blue-500 to-indigo-600",
-      discount: 25
-    },
-    { 
-      name: "Xozyain", 
-      price: "219₽",
-      oldPrice: "292₽",
-      features: ["⚡ Ударить молнией: /thor", "🌧️ Штормовая погода: /rain", "❤️ Исцелить себя: /heal", "📍 Установить варп: /setwarp", "🚫 Список банов: /banlist"],
-      color: "from-green-500 to-emerald-600",
-      discount: 25
-    },
-    { 
-      name: "Morok", 
-      price: "500₽",
-      oldPrice: "667₽",
-      features: ["🛡️ Дон-панель: /morok", "⬆️ Телепорт наверх: /top", "📋 Инфо по мутам/банам: /checkmute /checkban", "💰 Игровая зарплата: /salary"],
-      special: true,
-      color: "from-red-600 to-red-800",
-      discount: 25
-    },
-    { 
-      name: "Custom", 
-      price: "799₽",
-      oldPrice: "1065₽",
-      features: ["🎨 Индивидуальный донат по вашему запросу", "📧 Киньте админу фото с покупкой", "⏱️ Получите привилегию за 2 дня", "👑 Права как у Morok"],
-      color: "from-purple-500 to-pink-600",
-      discount: 25
-    },
-  ];
+
 
   const exclusiveDonate = {
     name: "Christmas",
@@ -724,6 +762,42 @@ const Index = () => {
             )}
           </Card>
 
+          <Card className="p-6 bg-card border-primary/50 shadow-2xl max-w-md max-h-[70vh] overflow-y-auto">
+            <div className="flex items-center justify-between mb-4">
+              <div className="flex items-center gap-2">
+                <Icon name="BarChart3" size={24} className="text-primary" />
+                <h3 className="text-xl font-bold">Статистика промокодов</h3>
+              </div>
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={() => setShowCouponStats(!showCouponStats)}
+              >
+                <Icon name={showCouponStats ? "ChevronDown" : "ChevronUp"} size={20} />
+              </Button>
+            </div>
+            {showCouponStats && (
+              <div className="space-y-3">
+                {coupons.map((coupon) => (
+                  <div key={coupon.id} className="bg-muted p-4 rounded-lg">
+                    <div className="flex items-center justify-between mb-2">
+                      <p className="font-bold">{coupon.code}</p>
+                      <Badge className="bg-primary/20 text-primary">{coupon.usedCount} использований</Badge>
+                    </div>
+                    <p className="text-sm text-muted-foreground">
+                      Скидка: {coupon.discount}% на {coupon.items.join(", ")}
+                    </p>
+                  </div>
+                ))}
+                <div className="pt-3 border-t">
+                  <p className="text-sm text-muted-foreground">
+                    Всего использований: {coupons.reduce((sum, c) => sum + c.usedCount, 0)}
+                  </p>
+                </div>
+              </div>
+            )}
+          </Card>
+
           <Card className="p-6 bg-card border-primary/50 shadow-2xl max-w-md">
             <div className="flex items-center justify-between mb-4">
               <div className="flex items-center gap-2">
@@ -790,42 +864,83 @@ const Index = () => {
                   Здесь вы можете редактировать донат-пакеты. Изменения применяются сразу на сайте.
                 </p>
                 <div className="space-y-3">
-                  {donatePackages.map((pkg, idx) => (
-                    <div key={idx} className="bg-muted p-3 rounded-lg">
+                  {donatePackages.map((pkg) => (
+                    <div key={pkg.id} className="bg-muted p-3 rounded-lg">
                       <div className="flex items-center justify-between mb-2">
                         <p className="font-bold">{pkg.name}</p>
-                        <Badge variant="outline">{pkg.price}</Badge>
+                        <div className="flex gap-2">
+                          <Badge variant="outline">{pkg.price}</Badge>
+                        </div>
                       </div>
                       <p className="text-xs text-muted-foreground mb-2">
                         {pkg.features.length} функций
                       </p>
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        className="w-full"
-                        onClick={() => setEditingDonate(pkg)}
-                      >
-                        <Icon name="Edit" size={14} className="mr-2" />
-                        Редактировать
-                      </Button>
+                      <div className="flex gap-2">
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          className="flex-1"
+                          onClick={() => setEditingDonatePackage(pkg)}
+                        >
+                          <Icon name="Edit" size={14} className="mr-2" />
+                          Изменить
+                        </Button>
+                        <Button
+                          variant="destructive"
+                          size="sm"
+                          onClick={() => deleteDonatePackage(pkg.id)}
+                        >
+                          <Icon name="Trash2" size={14} />
+                        </Button>
+                      </div>
                     </div>
                   ))}
                   
                   <div className="border-t pt-3">
-                    <p className="font-bold mb-2">Эксклюзивный донат</p>
-                    <div className="bg-muted p-3 rounded-lg">
-                      <div className="flex items-center justify-between mb-2">
-                        <p className="font-bold">{exclusiveDonate.name}</p>
-                        <Badge variant="outline">{exclusiveDonate.price}</Badge>
-                      </div>
+                    <p className="font-bold mb-2">Добавить новый донат</p>
+                    <div className="space-y-2">
+                      <input
+                        type="text"
+                        placeholder="Название"
+                        value={newDonatePackage.name}
+                        onChange={(e) => setNewDonatePackage({...newDonatePackage, name: e.target.value})}
+                        className="w-full bg-muted border border-border rounded-lg px-3 py-2 text-sm"
+                      />
+                      <input
+                        type="text"
+                        placeholder="Цена (напр. 99₽)"
+                        value={newDonatePackage.price}
+                        onChange={(e) => setNewDonatePackage({...newDonatePackage, price: e.target.value})}
+                        className="w-full bg-muted border border-border rounded-lg px-3 py-2 text-sm"
+                      />
+                      <input
+                        type="text"
+                        placeholder="Старая цена (напр. 150₽)"
+                        value={newDonatePackage.oldPrice}
+                        onChange={(e) => setNewDonatePackage({...newDonatePackage, oldPrice: e.target.value})}
+                        className="w-full bg-muted border border-border rounded-lg px-3 py-2 text-sm"
+                      />
+                      <input
+                        type="text"
+                        placeholder="Функции через запятую"
+                        value={newDonatePackage.features}
+                        onChange={(e) => setNewDonatePackage({...newDonatePackage, features: e.target.value})}
+                        className="w-full bg-muted border border-border rounded-lg px-3 py-2 text-sm"
+                      />
+                      <input
+                        type="text"
+                        placeholder="Цвет (напр. from-blue-500 to-indigo-600)"
+                        value={newDonatePackage.color}
+                        onChange={(e) => setNewDonatePackage({...newDonatePackage, color: e.target.value})}
+                        className="w-full bg-muted border border-border rounded-lg px-3 py-2 text-sm"
+                      />
                       <Button
-                        variant="outline"
-                        size="sm"
+                        onClick={addDonatePackage}
                         className="w-full"
-                        onClick={() => setEditingDonate(exclusiveDonate)}
+                        size="sm"
                       >
-                        <Icon name="Edit" size={14} className="mr-2" />
-                        Редактировать
+                        <Icon name="Plus" size={14} className="mr-2" />
+                        Добавить донат
                       </Button>
                     </div>
                   </div>
@@ -835,6 +950,82 @@ const Index = () => {
           </Card>
 
 
+        </div>
+      )}
+
+      {editingDonatePackage && (
+        <div className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+          <Card className="max-w-lg w-full max-h-[90vh] overflow-y-auto p-6 bg-card">
+            <div className="flex items-center justify-between mb-6">
+              <h3 className="text-2xl font-bold">Редактировать донат</h3>
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={() => setEditingDonatePackage(null)}
+              >
+                <Icon name="X" size={20} />
+              </Button>
+            </div>
+            
+            <div className="space-y-4">
+              <div>
+                <label className="text-sm font-medium mb-2 block">Название</label>
+                <input
+                  type="text"
+                  value={editingDonatePackage.name}
+                  onChange={(e) => setEditingDonatePackage({...editingDonatePackage, name: e.target.value})}
+                  className="w-full bg-muted border border-border rounded-lg px-3 py-2"
+                />
+              </div>
+              
+              <div>
+                <label className="text-sm font-medium mb-2 block">Цена</label>
+                <input
+                  type="text"
+                  value={editingDonatePackage.price}
+                  onChange={(e) => setEditingDonatePackage({...editingDonatePackage, price: e.target.value})}
+                  className="w-full bg-muted border border-border rounded-lg px-3 py-2"
+                />
+              </div>
+              
+              <div>
+                <label className="text-sm font-medium mb-2 block">Старая цена</label>
+                <input
+                  type="text"
+                  value={editingDonatePackage.oldPrice}
+                  onChange={(e) => setEditingDonatePackage({...editingDonatePackage, oldPrice: e.target.value})}
+                  className="w-full bg-muted border border-border rounded-lg px-3 py-2"
+                />
+              </div>
+              
+              <div>
+                <label className="text-sm font-medium mb-2 block">Функции (каждая с новой строки)</label>
+                <textarea
+                  value={Array.isArray(editingDonatePackage.features) ? editingDonatePackage.features.join('\n') : editingDonatePackage.features}
+                  onChange={(e) => setEditingDonatePackage({...editingDonatePackage, features: e.target.value.split('\n')})}
+                  className="w-full bg-muted border border-border rounded-lg px-3 py-2 min-h-[120px]"
+                />
+              </div>
+              
+              <div>
+                <label className="text-sm font-medium mb-2 block">Цвет градиента</label>
+                <input
+                  type="text"
+                  value={editingDonatePackage.color}
+                  onChange={(e) => setEditingDonatePackage({...editingDonatePackage, color: e.target.value})}
+                  className="w-full bg-muted border border-border rounded-lg px-3 py-2"
+                  placeholder="from-blue-500 to-indigo-600"
+                />
+              </div>
+              
+              <Button
+                onClick={updateDonatePackage}
+                className="w-full"
+              >
+                Сохранить изменения
+              </Button>
+            </div>
+          </Card>
         </div>
       )}
 
