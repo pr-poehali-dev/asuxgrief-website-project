@@ -2,7 +2,7 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import Icon from "@/components/ui/icon";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 const Index = () => {
   const [rubiesAmount, setRubiesAmount] = useState(1);
@@ -41,6 +41,7 @@ const Index = () => {
   const [showExclusiveDonatesPanel, setShowExclusiveDonatesPanel] = useState(true);
   const [showCasesPanel, setShowCasesPanel] = useState(true);
   const [showRevenuePanel, setShowRevenuePanel] = useState(true);
+  const [activeProductTab, setActiveProductTab] = useState<'donates' | 'exclusive' | 'cases' | 'rubies'>('donates');
   const [donatePackages, setDonatePackages] = useState([
     { 
       id: 1,
@@ -192,7 +193,7 @@ const Index = () => {
 
   const addDonatePackage = () => {
     if (newDonatePackage.name && newDonatePackage.price) {
-      setDonatePackages([...donatePackages, {
+      const newPackages = [...donatePackages, {
         id: Date.now(),
         name: newDonatePackage.name,
         price: newDonatePackage.price,
@@ -200,27 +201,33 @@ const Index = () => {
         features: newDonatePackage.features.split(",").map(f => f.trim()),
         color: newDonatePackage.color || "from-gray-500 to-gray-600",
         discount: 25
-      }]);
+      }];
+      setDonatePackages(newPackages);
+      localStorage.setItem('donatePackages', JSON.stringify(newPackages));
       setNewDonatePackage({ name: "", price: "", oldPrice: "", features: "", color: "" });
     }
   };
 
   const updateDonatePackage = () => {
     if (editingDonatePackage) {
-      setDonatePackages(donatePackages.map(d => 
+      const updatedPackages = donatePackages.map(d => 
         d.id === editingDonatePackage.id ? editingDonatePackage : d
-      ));
+      );
+      setDonatePackages(updatedPackages);
+      localStorage.setItem('donatePackages', JSON.stringify(updatedPackages));
       setEditingDonatePackage(null);
     }
   };
 
   const deleteDonatePackage = (id: number) => {
-    setDonatePackages(donatePackages.filter(d => d.id !== id));
+    const filteredPackages = donatePackages.filter(d => d.id !== id);
+    setDonatePackages(filteredPackages);
+    localStorage.setItem('donatePackages', JSON.stringify(filteredPackages));
   };
 
   const addExclusiveDonate = () => {
     if (newExclusiveDonate.name && newExclusiveDonate.price) {
-      setExclusiveDonates([...exclusiveDonates, {
+      const newDonates = [...exclusiveDonates, {
         id: Date.now(),
         name: newExclusiveDonate.name,
         price: newExclusiveDonate.price,
@@ -228,50 +235,84 @@ const Index = () => {
         features: newExclusiveDonate.features.split(",").map(f => f.trim()),
         color: newExclusiveDonate.color || "from-gray-500 to-gray-600",
         discount: 25
-      }]);
+      }];
+      setExclusiveDonates(newDonates);
+      localStorage.setItem('exclusiveDonates', JSON.stringify(newDonates));
       setNewExclusiveDonate({ name: "", price: "", oldPrice: "", features: "", color: "" });
     }
   };
 
   const updateExclusiveDonate = () => {
     if (editingExclusiveDonate) {
-      setExclusiveDonates(exclusiveDonates.map(d => 
+      const updatedDonates = exclusiveDonates.map(d => 
         d.id === editingExclusiveDonate.id ? editingExclusiveDonate : d
-      ));
+      );
+      setExclusiveDonates(updatedDonates);
+      localStorage.setItem('exclusiveDonates', JSON.stringify(updatedDonates));
       setEditingExclusiveDonate(null);
     }
   };
 
   const deleteExclusiveDonate = (id: number) => {
-    setExclusiveDonates(exclusiveDonates.filter(d => d.id !== id));
+    const filteredDonates = exclusiveDonates.filter(d => d.id !== id);
+    setExclusiveDonates(filteredDonates);
+    localStorage.setItem('exclusiveDonates', JSON.stringify(filteredDonates));
   };
 
   const addCase = () => {
     if (newCase.name && newCase.price) {
-      setCasePackages([...casePackages, {
+      const newCases = [...casePackages, {
         id: Date.now(),
         name: newCase.name,
         price: newCase.price,
         oldPrice: newCase.oldPrice,
         color: newCase.color || "from-gray-500 to-gray-600",
         discount: 25
-      }]);
+      }];
+      setCasePackages(newCases);
+      localStorage.setItem('casePackages', JSON.stringify(newCases));
       setNewCase({ name: "", price: "", oldPrice: "", color: "" });
     }
   };
 
   const updateCase = () => {
     if (editingCase) {
-      setCasePackages(casePackages.map(c => 
+      const updatedCases = casePackages.map(c => 
         c.id === editingCase.id ? editingCase : c
-      ));
+      );
+      setCasePackages(updatedCases);
+      localStorage.setItem('casePackages', JSON.stringify(updatedCases));
       setEditingCase(null);
     }
   };
 
   const deleteCase = (id: number) => {
-    setCasePackages(casePackages.filter(c => c.id !== id));
+    const filteredCases = casePackages.filter(c => c.id !== id);
+    setCasePackages(filteredCases);
+    localStorage.setItem('casePackages', JSON.stringify(filteredCases));
   };
+
+  useEffect(() => {
+    const savedDonates = localStorage.getItem('donatePackages');
+    const savedExclusive = localStorage.getItem('exclusiveDonates');
+    const savedCases = localStorage.getItem('casePackages');
+    const savedRubiesRate = localStorage.getItem('rubiesRate');
+    const savedRubiesPresets = localStorage.getItem('rubiesPresets');
+
+    if (savedDonates) setDonatePackages(JSON.parse(savedDonates));
+    if (savedExclusive) setExclusiveDonates(JSON.parse(savedExclusive));
+    if (savedCases) setCasePackages(JSON.parse(savedCases));
+    if (savedRubiesRate) setRubiesRate(JSON.parse(savedRubiesRate));
+    if (savedRubiesPresets) setRubiesPresets(JSON.parse(savedRubiesPresets));
+  }, []);
+
+  useEffect(() => {
+    localStorage.setItem('rubiesRate', JSON.stringify(rubiesRate));
+  }, [rubiesRate]);
+
+  useEffect(() => {
+    localStorage.setItem('rubiesPresets', JSON.stringify(rubiesPresets));
+  }, [rubiesPresets]);
 
   const generalRules = [
     { section: "1.0", title: "Общая информация", description: "Настоящий свод правил создан проектом AsuxGrief и применяются в рамках сервера AsuxGrief" },
@@ -933,11 +974,11 @@ const Index = () => {
             )}
           </Card>
 
-          <Card className="p-6 bg-card border-primary/50 shadow-2xl max-w-md max-h-[70vh] overflow-y-auto">
+          <Card className="p-6 bg-card border-primary/50 shadow-2xl max-w-lg max-h-[80vh] overflow-y-auto">
             <div className="flex items-center justify-between mb-4">
               <div className="flex items-center gap-2">
-                <Icon name="Package" size={24} className="text-primary" />
-                <h3 className="text-xl font-bold">Управление донатами</h3>
+                <Icon name="ShoppingBag" size={24} className="text-primary" />
+                <h3 className="text-xl font-bold">Управление товарами</h3>
               </div>
               <Button
                 variant="ghost"
@@ -949,367 +990,343 @@ const Index = () => {
             </div>
             {showDonatesPanel && (
               <div className="space-y-4">
-                <p className="text-sm text-muted-foreground">
-                  Здесь вы можете редактировать донат-пакеты. Изменения применяются сразу на сайте.
-                </p>
-                <div className="space-y-3">
-                  {donatePackages.map((pkg) => (
-                    <div key={pkg.id} className="bg-muted p-3 rounded-lg">
-                      <div className="flex items-center justify-between mb-2">
-                        <p className="font-bold">{pkg.name}</p>
-                        <div className="flex gap-2">
+                <div className="flex gap-2 p-1 bg-muted rounded-lg">
+                  <Button
+                    variant={activeProductTab === 'donates' ? 'default' : 'ghost'}
+                    size="sm"
+                    className="flex-1"
+                    onClick={() => setActiveProductTab('donates')}
+                  >
+                    <Icon name="Package" size={14} className="mr-2" />
+                    Донаты
+                  </Button>
+                  <Button
+                    variant={activeProductTab === 'exclusive' ? 'default' : 'ghost'}
+                    size="sm"
+                    className="flex-1"
+                    onClick={() => setActiveProductTab('exclusive')}
+                  >
+                    <Icon name="Star" size={14} className="mr-2" />
+                    Эксклюзив
+                  </Button>
+                  <Button
+                    variant={activeProductTab === 'cases' ? 'default' : 'ghost'}
+                    size="sm"
+                    className="flex-1"
+                    onClick={() => setActiveProductTab('cases')}
+                  >
+                    <Icon name="Box" size={14} className="mr-2" />
+                    Кейсы
+                  </Button>
+                  <Button
+                    variant={activeProductTab === 'rubies' ? 'default' : 'ghost'}
+                    size="sm"
+                    className="flex-1"
+                    onClick={() => setActiveProductTab('rubies')}
+                  >
+                    <Icon name="Gem" size={14} className="mr-2" />
+                    Рубины
+                  </Button>
+                </div>
+
+                {activeProductTab === 'donates' && (
+                  <div className="space-y-3">
+                    <p className="text-sm text-muted-foreground">
+                      Управление обычными донат-пакетами. Автосохранение.
+                    </p>
+                    {donatePackages.map((pkg) => (
+                      <div key={pkg.id} className="bg-muted p-3 rounded-lg">
+                        <div className="flex items-center justify-between mb-2">
+                          <p className="font-bold">{pkg.name}</p>
                           <Badge variant="outline">{pkg.price}</Badge>
                         </div>
-                      </div>
-                      <p className="text-xs text-muted-foreground mb-2">
-                        {pkg.features.length} функций
-                      </p>
-                      <div className="flex gap-2">
-                        <Button
-                          variant="outline"
-                          size="sm"
-                          className="flex-1"
-                          onClick={() => setEditingDonatePackage(pkg)}
-                        >
-                          <Icon name="Edit" size={14} className="mr-2" />
-                          Изменить
-                        </Button>
-                        <Button
-                          variant="destructive"
-                          size="sm"
-                          onClick={() => deleteDonatePackage(pkg.id)}
-                        >
-                          <Icon name="Trash2" size={14} />
-                        </Button>
-                      </div>
-                    </div>
-                  ))}
-                  
-                  <div className="border-t pt-3">
-                    <p className="font-bold mb-2">Добавить новый донат</p>
-                    <div className="space-y-2">
-                      <input
-                        type="text"
-                        placeholder="Название"
-                        value={newDonatePackage.name}
-                        onChange={(e) => setNewDonatePackage({...newDonatePackage, name: e.target.value})}
-                        className="w-full bg-muted border border-border rounded-lg px-3 py-2 text-sm"
-                      />
-                      <input
-                        type="text"
-                        placeholder="Цена (напр. 99₽)"
-                        value={newDonatePackage.price}
-                        onChange={(e) => setNewDonatePackage({...newDonatePackage, price: e.target.value})}
-                        className="w-full bg-muted border border-border rounded-lg px-3 py-2 text-sm"
-                      />
-                      <input
-                        type="text"
-                        placeholder="Старая цена (напр. 150₽)"
-                        value={newDonatePackage.oldPrice}
-                        onChange={(e) => setNewDonatePackage({...newDonatePackage, oldPrice: e.target.value})}
-                        className="w-full bg-muted border border-border rounded-lg px-3 py-2 text-sm"
-                      />
-                      <input
-                        type="text"
-                        placeholder="Функции через запятую"
-                        value={newDonatePackage.features}
-                        onChange={(e) => setNewDonatePackage({...newDonatePackage, features: e.target.value})}
-                        className="w-full bg-muted border border-border rounded-lg px-3 py-2 text-sm"
-                      />
-                      <input
-                        type="text"
-                        placeholder="Цвет (напр. from-blue-500 to-indigo-600)"
-                        value={newDonatePackage.color}
-                        onChange={(e) => setNewDonatePackage({...newDonatePackage, color: e.target.value})}
-                        className="w-full bg-muted border border-border rounded-lg px-3 py-2 text-sm"
-                      />
-                      <Button
-                        onClick={addDonatePackage}
-                        className="w-full"
-                        size="sm"
-                      >
-                        <Icon name="Plus" size={14} className="mr-2" />
-                        Добавить донат
-                      </Button>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            )}
-          </Card>
-
-          <Card className="p-6 bg-card border-primary/50 shadow-2xl max-w-md max-h-[70vh] overflow-y-auto">
-            <div className="flex items-center justify-between mb-4">
-              <div className="flex items-center gap-2">
-                <Icon name="Star" size={24} className="text-primary" />
-                <h3 className="text-xl font-bold">Эксклюзивные донаты</h3>
-              </div>
-              <Button
-                variant="ghost"
-                size="icon"
-                onClick={() => setShowExclusiveDonatesPanel(!showExclusiveDonatesPanel)}
-              >
-                <Icon name={showExclusiveDonatesPanel ? "ChevronDown" : "ChevronUp"} size={20} />
-              </Button>
-            </div>
-            {showExclusiveDonatesPanel && (
-              <div className="space-y-4">
-              <p className="text-sm text-muted-foreground">
-                Управление лимитированными и эксклюзивными донатами.
-              </p>
-              <div className="space-y-3">
-                {exclusiveDonates.map((donate) => (
-                  <div key={donate.id} className="bg-muted p-3 rounded-lg">
-                    <div className="flex items-center justify-between mb-2">
-                      <p className="font-bold">{donate.name}</p>
-                      <Badge variant="outline">{donate.price}</Badge>
-                    </div>
-                    <p className="text-xs text-muted-foreground mb-2">
-                      {donate.features.length} функций
-                    </p>
-                    <div className="flex gap-2">
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        className="flex-1"
-                        onClick={() => setEditingExclusiveDonate(donate)}
-                      >
-                        <Icon name="Edit" size={14} className="mr-2" />
-                        Изменить
-                      </Button>
-                      <Button
-                        variant="destructive"
-                        size="sm"
-                        onClick={() => deleteExclusiveDonate(donate.id)}
-                      >
-                        <Icon name="Trash2" size={14} />
-                      </Button>
-                    </div>
-                  </div>
-                ))}
-                
-                <div className="border-t pt-3">
-                  <p className="font-bold mb-2">Добавить эксклюзивный донат</p>
-                  <div className="space-y-2">
-                    <input
-                      type="text"
-                      placeholder="Название"
-                      value={newExclusiveDonate.name}
-                      onChange={(e) => setNewExclusiveDonate({...newExclusiveDonate, name: e.target.value})}
-                      className="w-full bg-muted border border-border rounded-lg px-3 py-2 text-sm"
-                    />
-                    <input
-                      type="text"
-                      placeholder="Цена (напр. 399₽)"
-                      value={newExclusiveDonate.price}
-                      onChange={(e) => setNewExclusiveDonate({...newExclusiveDonate, price: e.target.value})}
-                      className="w-full bg-muted border border-border rounded-lg px-3 py-2 text-sm"
-                    />
-                    <input
-                      type="text"
-                      placeholder="Старая цена (напр. 532₽)"
-                      value={newExclusiveDonate.oldPrice}
-                      onChange={(e) => setNewExclusiveDonate({...newExclusiveDonate, oldPrice: e.target.value})}
-                      className="w-full bg-muted border border-border rounded-lg px-3 py-2 text-sm"
-                    />
-                    <input
-                      type="text"
-                      placeholder="Функции через запятую"
-                      value={newExclusiveDonate.features}
-                      onChange={(e) => setNewExclusiveDonate({...newExclusiveDonate, features: e.target.value})}
-                      className="w-full bg-muted border border-border rounded-lg px-3 py-2 text-sm"
-                    />
-                    <input
-                      type="text"
-                      placeholder="Цвет (напр. from-red-600 to-green-600)"
-                      value={newExclusiveDonate.color}
-                      onChange={(e) => setNewExclusiveDonate({...newExclusiveDonate, color: e.target.value})}
-                      className="w-full bg-muted border border-border rounded-lg px-3 py-2 text-sm"
-                    />
-                    <Button
-                      onClick={addExclusiveDonate}
-                      className="w-full"
-                      size="sm"
-                    >
-                      <Icon name="Plus" size={14} className="mr-2" />
-                      Добавить
-                    </Button>
-                  </div>
-                </div>
-              </div>
-            </div>
-            )}
-          </Card>
-
-          <Card className="p-6 bg-card border-primary/50 shadow-2xl max-w-md max-h-[70vh] overflow-y-auto">
-            <div className="flex items-center justify-between mb-4">
-              <div className="flex items-center gap-2">
-                <Icon name="Box" size={24} className="text-primary" />
-                <h3 className="text-xl font-bold">Управление кейсами</h3>
-              </div>
-              <Button
-                variant="ghost"
-                size="icon"
-                onClick={() => setShowCasesPanel(!showCasesPanel)}
-              >
-                <Icon name={showCasesPanel ? "ChevronDown" : "ChevronUp"} size={20} />
-              </Button>
-            </div>
-            {showCasesPanel && (
-              <div className="space-y-4">
-              <p className="text-sm text-muted-foreground">
-                Редактируйте кейсы, добавляйте новые или удаляйте старые.
-              </p>
-              <div className="space-y-3">
-                {casePackages.map((caseItem) => (
-                  <div key={caseItem.id} className="bg-muted p-3 rounded-lg">
-                    <div className="flex items-center justify-between mb-2">
-                      <p className="font-bold">{caseItem.name}</p>
-                      <Badge variant="outline">{caseItem.price}</Badge>
-                    </div>
-                    <div className="flex gap-2 mt-2">
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        className="flex-1"
-                        onClick={() => setEditingCase(caseItem)}
-                      >
-                        <Icon name="Edit" size={14} className="mr-2" />
-                        Изменить
-                      </Button>
-                      <Button
-                        variant="destructive"
-                        size="sm"
-                        onClick={() => deleteCase(caseItem.id)}
-                      >
-                        <Icon name="Trash2" size={14} />
-                      </Button>
-                    </div>
-                  </div>
-                ))}
-                
-                <div className="border-t pt-3">
-                  <p className="font-bold mb-2">Добавить новый кейс</p>
-                  <div className="space-y-2">
-                    <input
-                      type="text"
-                      placeholder="Название"
-                      value={newCase.name}
-                      onChange={(e) => setNewCase({...newCase, name: e.target.value})}
-                      className="w-full bg-muted border border-border rounded-lg px-3 py-2 text-sm"
-                    />
-                    <input
-                      type="text"
-                      placeholder="Цена (напр. 79₽)"
-                      value={newCase.price}
-                      onChange={(e) => setNewCase({...newCase, price: e.target.value})}
-                      className="w-full bg-muted border border-border rounded-lg px-3 py-2 text-sm"
-                    />
-                    <input
-                      type="text"
-                      placeholder="Старая цена (напр. 105₽)"
-                      value={newCase.oldPrice}
-                      onChange={(e) => setNewCase({...newCase, oldPrice: e.target.value})}
-                      className="w-full bg-muted border border-border rounded-lg px-3 py-2 text-sm"
-                    />
-                    <input
-                      type="text"
-                      placeholder="Цвет (напр. from-amber-500 to-orange-600)"
-                      value={newCase.color}
-                      onChange={(e) => setNewCase({...newCase, color: e.target.value})}
-                      className="w-full bg-muted border border-border rounded-lg px-3 py-2 text-sm"
-                    />
-                    <Button
-                      onClick={addCase}
-                      className="w-full"
-                      size="sm"
-                    >
-                      <Icon name="Plus" size={14} className="mr-2" />
-                      Добавить кейс
-                    </Button>
-                  </div>
-                </div>
-              </div>
-            </div>
-            )}
-          </Card>
-
-          <Card className="p-6 bg-card border-primary/50 shadow-2xl max-w-md max-h-[70vh] overflow-y-auto">
-            <div className="flex items-center justify-between mb-4">
-              <div className="flex items-center gap-2">
-                <Icon name="Gem" size={24} className="text-primary" />
-                <h3 className="text-xl font-bold">Управление рубинами</h3>
-              </div>
-              <Button
-                variant="ghost"
-                size="icon"
-                onClick={() => setShowRubiesPanel(!showRubiesPanel)}
-              >
-                <Icon name={showRubiesPanel ? "ChevronDown" : "ChevronUp"} size={20} />
-              </Button>
-            </div>
-            {showRubiesPanel && (
-              <div className="space-y-4">
-                <div>
-                  <label className="text-sm font-medium mb-2 block">Курс обмена (рубинов за 1₽)</label>
-                  <input
-                    type="number"
-                    value={rubiesRate}
-                    onChange={(e) => setRubiesRate(parseInt(e.target.value) || 100)}
-                    className="w-full bg-muted border border-border rounded-lg px-3 py-2"
-                  />
-                  <p className="text-xs text-muted-foreground mt-1">
-                    Сейчас: 1₽ = {rubiesRate} рубинов
-                  </p>
-                </div>
-                
-                <div>
-                  <label className="text-sm font-medium mb-2 block">Быстрые суммы</label>
-                  <div className="space-y-2">
-                    {rubiesPresets.map((preset, idx) => (
-                      <div key={idx} className="flex items-center gap-2">
-                        <input
-                          type="number"
-                          value={preset}
-                          onChange={(e) => {
-                            const newPresets = [...rubiesPresets];
-                            newPresets[idx] = parseInt(e.target.value) || 0;
-                            setRubiesPresets(newPresets);
-                          }}
-                          className="flex-1 bg-muted border border-border rounded-lg px-3 py-2 text-sm"
-                        />
-                        <Button
-                          variant="destructive"
-                          size="sm"
-                          onClick={() => setRubiesPresets(rubiesPresets.filter((_, i) => i !== idx))}
-                        >
-                          <Icon name="Trash2" size={14} />
-                        </Button>
+                        <p className="text-xs text-muted-foreground mb-2">
+                          {pkg.features.length} функций
+                        </p>
+                        <div className="flex gap-2">
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            className="flex-1"
+                            onClick={() => setEditingDonatePackage(pkg)}
+                          >
+                            <Icon name="Edit" size={14} className="mr-2" />
+                            Изменить
+                          </Button>
+                          <Button
+                            variant="destructive"
+                            size="sm"
+                            onClick={() => deleteDonatePackage(pkg.id)}
+                          >
+                            <Icon name="Trash2" size={14} />
+                          </Button>
+                        </div>
                       </div>
                     ))}
-                    
-                    <div className="flex gap-2 pt-2 border-t">
-                      <input
-                        type="number"
-                        placeholder="Новая сумма"
-                        value={newRubiesPreset}
-                        onChange={(e) => setNewRubiesPreset(e.target.value)}
-                        className="flex-1 bg-muted border border-border rounded-lg px-3 py-2 text-sm"
-                      />
-                      <Button
-                        onClick={() => {
-                          if (newRubiesPreset && parseInt(newRubiesPreset) > 0) {
-                            setRubiesPresets([...rubiesPresets, parseInt(newRubiesPreset)]);
-                            setNewRubiesPreset("");
-                          }
-                        }}
-                        size="sm"
-                      >
-                        <Icon name="Plus" size={14} />
-                      </Button>
+                    <div className="border-t pt-3">
+                      <p className="font-bold mb-2">Добавить донат</p>
+                      <div className="space-y-2">
+                        <input
+                          type="text"
+                          placeholder="Название"
+                          value={newDonatePackage.name}
+                          onChange={(e) => setNewDonatePackage({...newDonatePackage, name: e.target.value})}
+                          className="w-full bg-muted border border-border rounded-lg px-3 py-2 text-sm"
+                        />
+                        <input
+                          type="text"
+                          placeholder="Цена (напр. 99₽)"
+                          value={newDonatePackage.price}
+                          onChange={(e) => setNewDonatePackage({...newDonatePackage, price: e.target.value})}
+                          className="w-full bg-muted border border-border rounded-lg px-3 py-2 text-sm"
+                        />
+                        <input
+                          type="text"
+                          placeholder="Старая цена (напр. 150₽)"
+                          value={newDonatePackage.oldPrice}
+                          onChange={(e) => setNewDonatePackage({...newDonatePackage, oldPrice: e.target.value})}
+                          className="w-full bg-muted border border-border rounded-lg px-3 py-2 text-sm"
+                        />
+                        <input
+                          type="text"
+                          placeholder="Функции через запятую"
+                          value={newDonatePackage.features}
+                          onChange={(e) => setNewDonatePackage({...newDonatePackage, features: e.target.value})}
+                          className="w-full bg-muted border border-border rounded-lg px-3 py-2 text-sm"
+                        />
+                        <input
+                          type="text"
+                          placeholder="Цвет (напр. from-blue-500 to-indigo-600)"
+                          value={newDonatePackage.color}
+                          onChange={(e) => setNewDonatePackage({...newDonatePackage, color: e.target.value})}
+                          className="w-full bg-muted border border-border rounded-lg px-3 py-2 text-sm"
+                        />
+                        <Button onClick={addDonatePackage} className="w-full" size="sm">
+                          <Icon name="Plus" size={14} className="mr-2" />
+                          Добавить
+                        </Button>
+                      </div>
                     </div>
                   </div>
-                </div>
+                )}
+
+                {activeProductTab === 'exclusive' && (
+                  <div className="space-y-3">
+                    <p className="text-sm text-muted-foreground">
+                      Управление эксклюзивными донатами. Автосохранение.
+                    </p>
+                    {exclusiveDonates.map((donate) => (
+                      <div key={donate.id} className="bg-muted p-3 rounded-lg">
+                        <div className="flex items-center justify-between mb-2">
+                          <p className="font-bold">{donate.name}</p>
+                          <Badge variant="outline">{donate.price}</Badge>
+                        </div>
+                        <p className="text-xs text-muted-foreground mb-2">
+                          {donate.features.length} функций
+                        </p>
+                        <div className="flex gap-2">
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            className="flex-1"
+                            onClick={() => setEditingExclusiveDonate(donate)}
+                          >
+                            <Icon name="Edit" size={14} className="mr-2" />
+                            Изменить
+                          </Button>
+                          <Button
+                            variant="destructive"
+                            size="sm"
+                            onClick={() => deleteExclusiveDonate(donate.id)}
+                          >
+                            <Icon name="Trash2" size={14} />
+                          </Button>
+                        </div>
+                      </div>
+                    ))}
+                    <div className="border-t pt-3">
+                      <p className="font-bold mb-2">Добавить эксклюзив</p>
+                      <div className="space-y-2">
+                        <input
+                          type="text"
+                          placeholder="Название"
+                          value={newExclusiveDonate.name}
+                          onChange={(e) => setNewExclusiveDonate({...newExclusiveDonate, name: e.target.value})}
+                          className="w-full bg-muted border border-border rounded-lg px-3 py-2 text-sm"
+                        />
+                        <input
+                          type="text"
+                          placeholder="Цена (напр. 399₽)"
+                          value={newExclusiveDonate.price}
+                          onChange={(e) => setNewExclusiveDonate({...newExclusiveDonate, price: e.target.value})}
+                          className="w-full bg-muted border border-border rounded-lg px-3 py-2 text-sm"
+                        />
+                        <input
+                          type="text"
+                          placeholder="Старая цена (напр. 532₽)"
+                          value={newExclusiveDonate.oldPrice}
+                          onChange={(e) => setNewExclusiveDonate({...newExclusiveDonate, oldPrice: e.target.value})}
+                          className="w-full bg-muted border border-border rounded-lg px-3 py-2 text-sm"
+                        />
+                        <input
+                          type="text"
+                          placeholder="Функции через запятую"
+                          value={newExclusiveDonate.features}
+                          onChange={(e) => setNewExclusiveDonate({...newExclusiveDonate, features: e.target.value})}
+                          className="w-full bg-muted border border-border rounded-lg px-3 py-2 text-sm"
+                        />
+                        <input
+                          type="text"
+                          placeholder="Цвет (напр. from-red-600 to-green-600)"
+                          value={newExclusiveDonate.color}
+                          onChange={(e) => setNewExclusiveDonate({...newExclusiveDonate, color: e.target.value})}
+                          className="w-full bg-muted border border-border rounded-lg px-3 py-2 text-sm"
+                        />
+                        <Button onClick={addExclusiveDonate} className="w-full" size="sm">
+                          <Icon name="Plus" size={14} className="mr-2" />
+                          Добавить
+                        </Button>
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+                {activeProductTab === 'cases' && (
+                  <div className="space-y-3">
+                    <p className="text-sm text-muted-foreground">
+                      Управление игровыми кейсами. Автосохранение.
+                    </p>
+                    {casePackages.map((caseItem) => (
+                      <div key={caseItem.id} className="bg-muted p-3 rounded-lg">
+                        <div className="flex items-center justify-between mb-2">
+                          <p className="font-bold">{caseItem.name}</p>
+                          <Badge variant="outline">{caseItem.price}</Badge>
+                        </div>
+                        <div className="flex gap-2 mt-2">
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            className="flex-1"
+                            onClick={() => setEditingCase(caseItem)}
+                          >
+                            <Icon name="Edit" size={14} className="mr-2" />
+                            Изменить
+                          </Button>
+                          <Button
+                            variant="destructive"
+                            size="sm"
+                            onClick={() => deleteCase(caseItem.id)}
+                          >
+                            <Icon name="Trash2" size={14} />
+                          </Button>
+                        </div>
+                      </div>
+                    ))}
+                    <div className="border-t pt-3">
+                      <p className="font-bold mb-2">Добавить кейс</p>
+                      <div className="space-y-2">
+                        <input
+                          type="text"
+                          placeholder="Название"
+                          value={newCase.name}
+                          onChange={(e) => setNewCase({...newCase, name: e.target.value})}
+                          className="w-full bg-muted border border-border rounded-lg px-3 py-2 text-sm"
+                        />
+                        <input
+                          type="text"
+                          placeholder="Цена (напр. 79₽)"
+                          value={newCase.price}
+                          onChange={(e) => setNewCase({...newCase, price: e.target.value})}
+                          className="w-full bg-muted border border-border rounded-lg px-3 py-2 text-sm"
+                        />
+                        <input
+                          type="text"
+                          placeholder="Старая цена (напр. 105₽)"
+                          value={newCase.oldPrice}
+                          onChange={(e) => setNewCase({...newCase, oldPrice: e.target.value})}
+                          className="w-full bg-muted border border-border rounded-lg px-3 py-2 text-sm"
+                        />
+                        <input
+                          type="text"
+                          placeholder="Цвет (напр. from-amber-500 to-orange-600)"
+                          value={newCase.color}
+                          onChange={(e) => setNewCase({...newCase, color: e.target.value})}
+                          className="w-full bg-muted border border-border rounded-lg px-3 py-2 text-sm"
+                        />
+                        <Button onClick={addCase} className="w-full" size="sm">
+                          <Icon name="Plus" size={14} className="mr-2" />
+                          Добавить
+                        </Button>
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+                {activeProductTab === 'rubies' && (
+                  <div className="space-y-4">
+                    <p className="text-sm text-muted-foreground">
+                      Настройка игровой валюты. Автосохранение.
+                    </p>
+                    <div>
+                      <label className="text-sm font-medium mb-2 block">Курс обмена (рубинов за 1₽)</label>
+                      <input
+                        type="number"
+                        value={rubiesRate}
+                        onChange={(e) => setRubiesRate(parseInt(e.target.value) || 100)}
+                        className="w-full bg-muted border border-border rounded-lg px-3 py-2"
+                      />
+                      <p className="text-xs text-muted-foreground mt-1">
+                        Сейчас: 1₽ = {rubiesRate} рубинов
+                      </p>
+                    </div>
+                    <div>
+                      <label className="text-sm font-medium mb-2 block">Быстрые суммы</label>
+                      <div className="space-y-2">
+                        {rubiesPresets.map((preset, idx) => (
+                          <div key={idx} className="flex items-center gap-2">
+                            <input
+                              type="number"
+                              value={preset}
+                              onChange={(e) => {
+                                const newPresets = [...rubiesPresets];
+                                newPresets[idx] = parseInt(e.target.value) || 0;
+                                setRubiesPresets(newPresets);
+                              }}
+                              className="flex-1 bg-muted border border-border rounded-lg px-3 py-2 text-sm"
+                            />
+                            <Button
+                              variant="destructive"
+                              size="sm"
+                              onClick={() => setRubiesPresets(rubiesPresets.filter((_, i) => i !== idx))}
+                            >
+                              <Icon name="Trash2" size={14} />
+                            </Button>
+                          </div>
+                        ))}
+                        <div className="flex gap-2 pt-2 border-t">
+                          <input
+                            type="number"
+                            placeholder="Новая сумма"
+                            value={newRubiesPreset}
+                            onChange={(e) => setNewRubiesPreset(e.target.value)}
+                            className="flex-1 bg-muted border border-border rounded-lg px-3 py-2 text-sm"
+                          />
+                          <Button
+                            onClick={() => {
+                              if (newRubiesPreset && parseInt(newRubiesPreset) > 0) {
+                                setRubiesPresets([...rubiesPresets, parseInt(newRubiesPreset)]);
+                                setNewRubiesPreset("");
+                              }
+                            }}
+                            size="sm"
+                          >
+                            <Icon name="Plus" size={14} />
+                          </Button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                )}
               </div>
             )}
           </Card>
