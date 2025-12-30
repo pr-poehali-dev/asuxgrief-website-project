@@ -264,6 +264,7 @@ const Index = () => {
               >
                 <Icon name="Lock" size={20} />
               </button>
+            </div>
           </div>
         </div>
       </nav>
